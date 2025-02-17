@@ -65,7 +65,7 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 
 			// Color based on distance
 			intensity := uint8(255 - math.Min(255, distance/2))
-			renderer.SetDrawColor(intensity, intensity/2, intensity/2, 255)
+			renderer.SetDrawColor(0, intensity/2, 0, 255)
 			renderer.FillRect(&wallRect)
 
 			rayAngle += DM.FOV / float64(DM.NumRays)
