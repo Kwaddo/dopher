@@ -13,7 +13,7 @@ func main() {
 	}
 	defer sdl.Quit()
 
-	window, err := sdl.CreateWindow("Doom in Go", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
+	window, err := sdl.CreateWindow("Dopher Engine", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		DM.ScreenWidth, DM.ScreenHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
