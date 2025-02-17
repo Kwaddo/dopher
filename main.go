@@ -26,7 +26,7 @@ func main() {
 	}
 	defer renderer.Destroy()
 
-	player := &DM.Player{
+	player := &Game.Player{
 		X:     150,
 		Y:     150,
 		Angle: 0,

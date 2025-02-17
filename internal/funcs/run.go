@@ -7,7 +7,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func GameLoop(renderer *sdl.Renderer, player *DM.Player) {
+func GameLoop(renderer *sdl.Renderer, player *Player) {
 	running := true
 	for running {
 		// Handle events
@@ -29,23 +29,7 @@ func GameLoop(renderer *sdl.Renderer, player *DM.Player) {
 			player.Angle += DM.RotateSpeed
 		}
 
-		// Move with up/down arrows
-		if keys[sdl.SCANCODE_UP] == 1 {
-			newX := player.X + math.Cos(player.Angle)*DM.MoveSpeed
-			newY := player.Y + math.Sin(player.Angle)*DM.MoveSpeed
-			if !CheckCollision(newX, newY) {
-				player.X = newX
-				player.Y = newY
-			}
-		}
-		if keys[sdl.SCANCODE_DOWN] == 1 {
-			newX := player.X - math.Cos(player.Angle)*DM.MoveSpeed
-			newY := player.Y - math.Sin(player.Angle)*DM.MoveSpeed
-			if !CheckCollision(newX, newY) {
-				player.X = newX
-				player.Y = newY
-			}
-		}
+		player.UpdateMovement(keys)
 
 		// When quitting
 		if keys[sdl.SCANCODE_ESCAPE] == 1 || keys[sdl.SCANCODE_Q] == 1 {
