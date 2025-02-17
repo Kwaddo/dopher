@@ -31,7 +31,5 @@ func main() {
 		Y:     150,
 		Angle: 0,
 	}
-
-	// Remove the goroutine and channel, run the game loop directly
-	Game.GameLoop(renderer, player, nil)
+	Game.GameLoop(renderer, player)
 }

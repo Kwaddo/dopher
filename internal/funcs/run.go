@@ -7,7 +7,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func GameLoop(renderer *sdl.Renderer, player *DM.Player, done chan struct{}) {
+func GameLoop(renderer *sdl.Renderer, player *DM.Player) {
 	running := true
 	for running {
 		// Handle events
