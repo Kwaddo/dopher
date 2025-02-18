@@ -8,6 +8,13 @@ import (
 )
 
 func GameLoop(renderer *sdl.Renderer, player *Player) {
+	// Load wall texture
+	texture, err := loadTexture(renderer)
+	if err != nil {
+		panic(err)
+	}
+	defer texture.Destroy()
+
 	running := true
 	for running {
 		// Handle events
@@ -43,10 +50,10 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 		// Draw 3D view
 		rayAngle := player.Angle - DM.FOV/2
 		for i := 0; i < DM.NumRays; i++ {
-			distance := CastRay(player.X, player.Y, rayAngle)
+			rayResult := CastRay(player.X, player.Y, rayAngle)
 
 			// Fix fisheye effect
-			distance = distance * math.Cos(rayAngle-player.Angle)
+			distance := rayResult.Distance * math.Cos(rayAngle-player.Angle)
 
 			// Calculate wall height
 			wallHeight := (DM.ScreenHeight / distance) * 50
@@ -54,19 +61,33 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 				wallHeight = DM.ScreenHeight
 			}
 
+			// Calculate darkness based on distance
+			darkness := uint8(math.Min(255, math.Max(0, distance/2.5)))
+			renderer.SetDrawColor(255-darkness, 255-darkness, 255-darkness, 255)
+
 			// Draw wall slice
 			wallTop := (DM.ScreenHeight - wallHeight) / 2
-			wallRect := sdl.Rect{
+
+			// Calculate texture X coordinate based on exact hit position
+			textureX := rayResult.TextureX
+
+			srcRect := &sdl.Rect{
+				X: textureX,
+				Y: 0,
+				W: 1,
+				H: 64, // assuming texture height is 64 pixels
+			}
+
+			dstRect := &sdl.Rect{
 				X: int32(i * (DM.ScreenWidth / DM.NumRays)),
 				Y: int32(wallTop),
 				W: int32(DM.ScreenWidth/DM.NumRays + 1),
 				H: int32(wallHeight),
 			}
 
-			// Color based on distance
-			intensity := uint8(255 - math.Min(255, distance/2))
-			renderer.SetDrawColor(0, intensity/2, 0, 255)
-			renderer.FillRect(&wallRect)
+			// Set the texture color modulation based on distance
+			texture.SetColorMod(255-darkness, 255-darkness, 255-darkness)
+			renderer.Copy(texture, srcRect, dstRect)
 
 			rayAngle += DM.FOV / float64(DM.NumRays)
 		}
