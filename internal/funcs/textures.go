@@ -13,15 +13,13 @@ func LoadTextures(renderer *sdl.Renderer) (*TextureMap, error) {
 		Textures: make(map[int]*sdl.Texture),
 	}
 
-	// Load different wall textures
+	// Load different textures
 	textureFiles := map[int]string{
 		1: "assets/wall.bmp",
-		2: "assets/wall.bmp",
-		3: "assets/wall.bmp",
-		// Add more textures as needed
+		2: "assets/npc.bmp", 
 	}
 
-	for wallType, file := range textureFiles {
+	for textureType, file := range textureFiles {
 		surface, err := sdl.LoadBMP(file)
 		if err != nil {
 			return nil, err
@@ -32,7 +30,7 @@ func LoadTextures(renderer *sdl.Renderer) (*TextureMap, error) {
 		if err != nil {
 			return nil, err
 		}
-		textures.Textures[wallType] = texture
+		textures.Textures[textureType] = texture
 	}
 
 	return textures, nil
