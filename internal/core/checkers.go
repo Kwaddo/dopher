@@ -1,4 +1,4 @@
-package funcs
+package core
 
 import (
 	"math"
@@ -19,6 +19,20 @@ func CheckCollision(x, y float64) bool {
 			if WM[mapY][mapX] == 1 {
 				return true
 			}
+		}
+	}
+	return false
+}
+
+func (nm *NPCManager) CheckNPCCollision(x, y float64) bool {
+	for _, npc := range nm.NPCs {
+		dx := x - npc.X
+		dy := y - npc.Y
+		distSquared := dx*dx + dy*dy
+
+		// If distance is less than hitbox radius, collision occurred
+		if distSquared < npc.Hitbox.Radius*npc.Hitbox.Radius {
+			return true
 		}
 	}
 	return false

@@ -1,4 +1,4 @@
-package funcs
+package core
 
 import (
 	DM "doom/internal/constants"
@@ -7,14 +7,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type RenderSlice struct {
-	DstRect  *sdl.Rect
-	Darkness uint8
-	Color    sdl.Color
-	WallType int
-	TexCoord int32
-	Distance float64
-}
+type RenderSlice DM.RenderSlice
 
 func RenderSlices(player *Player, DynamicFOV float64, renderChan chan<- []RenderSlice) {
 	slices := make([]RenderSlice, DM.NumRays)

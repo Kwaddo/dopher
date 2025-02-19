@@ -2,7 +2,7 @@ package main
 
 import (
 	DM "doom/internal/constants"
-	Game "doom/internal/funcs"
+	Game "doom/internal/core"
 
 	"github.com/veandco/go-sdl2/sdl"
 )

@@ -1,23 +1,21 @@
-package funcs
+package core
 
 import (
-	"math"
 	DM "doom/internal/constants"
+	"math"
 )
 
 type NPCManager DM.NPCManager
 
-var (
-	GlobalNPCManager *NPCManager
-)
+var GlobalNPCManager *NPCManager
 
 func NewNPCManager() *NPCManager {
 	return &NPCManager{
 		NPCs: []*DM.NPC{
 			{
 				X:       450, // Positioned at x=450
-				Y:       450, 
-				Texture: 2, 
+				Y:       450,
+				Texture: 2,
 				Width:   64,
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{
@@ -59,18 +57,4 @@ func (nm *NPCManager) SortByDistance() {
 			}
 		}
 	}
-}
-
-func (nm *NPCManager) CheckNPCCollision(x, y float64) bool {
-	for _, npc := range nm.NPCs {
-		dx := x - npc.X
-		dy := y - npc.Y
-		distSquared := dx*dx + dy*dy
-
-		// If distance is less than hitbox radius, collision occurred
-		if distSquared < npc.Hitbox.Radius*npc.Hitbox.Radius {
-			return true
-		}
-	}
-	return false
 }
