@@ -1,7 +1,7 @@
 package core
 
 import (
-	DM "doom/internal/constants"
+	DM "doom/internal/model"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"

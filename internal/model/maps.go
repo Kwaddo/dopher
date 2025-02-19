@@ -1,4 +1,4 @@
-package constants
+package model
 
 type Map struct {
 	WorldMap [][]int

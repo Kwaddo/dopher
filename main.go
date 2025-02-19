@@ -1,8 +1,8 @@
 package main
 
 import (
-	DM "doom/internal/constants"
 	Game "doom/internal/core"
+	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
 )

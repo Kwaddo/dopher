@@ -1,8 +1,8 @@
 package core
 
 import (
+	DM "doom/internal/model"
 	"math"
-	DM "doom/internal/constants"
 )
 
 func CheckCollision(x, y float64) bool {
