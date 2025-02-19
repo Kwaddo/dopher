@@ -1,5 +1,7 @@
 # Dopher - A Doom-style Engine in Go
 
+![alt text](./assets/logo.png)
+
 A simple raycasting engine inspired by the original Doom, implemented in Go using SDL2.
 
 ## Description
