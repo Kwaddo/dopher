@@ -5,45 +5,91 @@ import (
 	"math"
 )
 
-// New struct to hold ray casting results
 type RayHit struct {
-	Distance float64
-	TextureX int32
+	Distance   float64
+	WallType   int
+	HitPointX  float64
+	HitPointY  float64
+	IsVertical bool
 }
 
 func CastRay(startX, startY, angle float64) RayHit {
-	rayX := math.Cos(angle)
-	rayY := math.Sin(angle)
-	WM := DM.GlobalMap.WorldMap
-	distance := 0.0
-
-	// Use smaller step size for more precise hits
-	step := 0.1 // More precise step size
-
-	for distance < DM.MaxDepth {
-		x := startX + rayX*distance
-		y := startY + rayY*distance
-
-		mapX := int(x / 100)
-		mapY := int(y / 100)
-
-		if mapX >= 0 && mapX < len(WM[0]) && mapY >= 0 && mapY < len(WM) {
-			if WM[mapY][mapX] == 1 {
-				// Calculate exact hit position
-				textureX := int32(math.Floor(math.Mod(x, 100.0)) * 0.64) // Scale to texture width
-
-				return RayHit{
-					Distance: distance,
-					TextureX: textureX,
-				}
-			}
-		}
-
-		distance += step
+	// Normalize angle
+	for angle < 0 {
+		angle += 2 * math.Pi
+	}
+	for angle >= 2*math.Pi {
+		angle -= 2 * math.Pi
 	}
 
-	return RayHit{
-		Distance: distance,
-		TextureX: 0,
+	// Precalculate ray direction
+	rayX := math.Cos(angle)
+	rayY := math.Sin(angle)
+
+	// Current map position
+	mapX := int(startX / 100)
+	mapY := int(startY / 100)
+
+	// Calculate delta distance
+	deltaDistX := math.Abs(1 / rayX)
+	deltaDistY := math.Abs(1 / rayY)
+
+	// Calculate step and initial side distance
+	var stepX, stepY int
+	var sideDistX, sideDistY float64
+
+	if rayX < 0 {
+		stepX = -1
+		sideDistX = (startX/100 - float64(mapX)) * deltaDistX * 100
+	} else {
+		stepX = 1
+		sideDistX = (float64(mapX) + 1.0 - startX/100) * deltaDistX * 100
+	}
+
+	if rayY < 0 {
+		stepY = -1
+		sideDistY = (startY/100 - float64(mapY)) * deltaDistY * 100
+	} else {
+		stepY = 1
+		sideDistY = (float64(mapY) + 1.0 - startY/100) * deltaDistY * 100
+	}
+
+	// DDA algorithm
+	var isVertical bool
+	WM := DM.GlobalMap.WorldMap
+
+	for {
+		// Jump to next map square
+		if sideDistX < sideDistY {
+			sideDistX += deltaDistX * 100
+			mapX += stepX
+			isVertical = true
+		} else {
+			sideDistY += deltaDistY * 100
+			mapY += stepY
+			isVertical = false
+		}
+
+		// Check if ray has hit a wall
+		if mapX < 0 || mapX >= len(WM[0]) || mapY < 0 || mapY >= len(WM) {
+			return RayHit{Distance: DM.MaxDepth, WallType: 0}
+		}
+
+		if WM[mapY][mapX] > 0 {
+			var distance float64
+			if isVertical {
+				distance = (float64(mapX) - startX/100 + (1-float64(stepX))/2) / rayX * 100
+			} else {
+				distance = (float64(mapY) - startY/100 + (1-float64(stepY))/2) / rayY * 100
+			}
+
+			return RayHit{
+				Distance:   distance,
+				WallType:   WM[mapY][mapX],
+				HitPointX:  startX + rayX*distance,
+				HitPointY:  startY + rayY*distance,
+				IsVertical: isVertical,
+			}
+		}
 	}
 }

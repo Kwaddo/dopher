@@ -1,9 +1,9 @@
 package funcs
 
 import (
-	"math"
-	"github.com/veandco/go-sdl2/sdl"
 	DM "doom/internal/constants"
+	"github.com/veandco/go-sdl2/sdl"
+	"math"
 )
 
 type Player struct {
@@ -11,17 +11,24 @@ type Player struct {
 	Angle     float64
 	VelocityX float64
 	VelocityY float64
+	Walking   bool
+	Running   bool
 }
 
-func (player *Player) UpdateMovement(keys []uint8) {
+func (player *Player) UpdateMovement(keys []uint8) bool {
 	speedMultiplier := 1.0
-    if keys[sdl.SCANCODE_LSHIFT] == 1 {
-        speedMultiplier = DM.SprintMultiplier
-    }
+	if keys[sdl.SCANCODE_LSHIFT] == 1 {
+		speedMultiplier = DM.SprintMultiplier
+		if player.Walking {
+			player.Running = true
+		}
+	} else {
+		player.Running = false
+	}
 
-    // Compute acceleration and max speed based on sprinting state
-    Acceleration := DM.BaseAcceleration * speedMultiplier
-    MaxSpeed := DM.BaseMaxSpeed * speedMultiplier
+	// Compute acceleration and max speed based on sprinting state
+	Acceleration := DM.BaseAcceleration * speedMultiplier
+	MaxSpeed := DM.BaseMaxSpeed * speedMultiplier
 	// Compute directional vectors
 	forwardX := math.Cos(player.Angle)
 	forwardY := math.Sin(player.Angle)
@@ -44,6 +51,22 @@ func (player *Player) UpdateMovement(keys []uint8) {
 	if keys[sdl.SCANCODE_D] == 1 { // Strafe right
 		player.VelocityX += strafeX * Acceleration
 		player.VelocityY += strafeY * Acceleration
+	}
+	// Rotate with left/right arrows
+	if keys[sdl.SCANCODE_LEFT] == 1 {
+		player.Angle -= DM.RotateSpeed
+	}
+	if keys[sdl.SCANCODE_RIGHT] == 1 {
+		player.Angle += DM.RotateSpeed
+	}
+	if keys[sdl.SCANCODE_ESCAPE] == 1 || keys[sdl.SCANCODE_Q] == 1 {
+		return true
+	}
+	if keys[sdl.SCANCODE_W] == 1 || keys[sdl.SCANCODE_S] == 1 ||
+		keys[sdl.SCANCODE_A] == 1 || keys[sdl.SCANCODE_D] == 1 {
+		player.Walking = true
+	} else {
+		player.Walking = false
 	}
 
 	// Apply friction when no keys are pressed
@@ -70,13 +93,18 @@ func (player *Player) UpdateMovement(keys []uint8) {
 		player.VelocityX = 0
 		player.VelocityY = 0
 	} else if collidesX {
-		player.Y = newY-0.5
+		player.Y = newY - 0.5
 		player.VelocityX = 0
 	} else if collidesY {
-		player.X = newX-0.5
+		player.X = newX - 0.5
 		player.VelocityY = 0
 	} else {
 		player.X = newX
 		player.Y = newY
 	}
+	return false
+}
+
+func LERP(start, end, t float64) float64 {
+	return start + t*(end-start)
 }

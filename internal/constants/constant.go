@@ -5,7 +5,7 @@ import "math"
 const (
 	ScreenWidth     = 1500
 	ScreenHeight    = 900
-	FOV             = math.Pi / 3
+	FOV             = math.Pi / 3.5
 	NumRays         = 120
 	MaxDepth        = 800.0
 	RotateSpeed     = 0.1
