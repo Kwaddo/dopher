@@ -20,9 +20,9 @@ func NewNPCManager() *NPCManager {
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{
 					Radius: 24,
-					},
-				DialogText: "Hello traveler!",
-				ShowDialog: false,
+				},
+				DialogText:  "Hello traveler!",
+				ShowDialog:  false,
 				DialogTimer: 0,
 			},
 		},

@@ -1,8 +1,8 @@
 package player
 
 import (
-	DM "doom/internal/model"
 	NPC "doom/internal/char/npc"
+	DM "doom/internal/model"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"

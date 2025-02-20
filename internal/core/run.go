@@ -1,10 +1,10 @@
 package core
 
 import (
-	DM "doom/internal/model"
 	NPC "doom/internal/char/npc"
 	MC "doom/internal/char/player"
 	Graphics "doom/internal/graphics"
+	DM "doom/internal/model"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"

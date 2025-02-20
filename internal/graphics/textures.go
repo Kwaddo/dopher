@@ -13,7 +13,7 @@ func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 	// Load different textures
 	textureFiles := map[int]string{
 		1: "assets/wall.bmp",
-		2: "assets/npc.bmp", 
+		2: "assets/npc.bmp",
 	}
 
 	for textureType, file := range textureFiles {

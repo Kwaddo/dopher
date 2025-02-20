@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/veandco/go-sdl2/ttf"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 type Player struct {
@@ -36,15 +36,15 @@ type TextureMap struct {
 }
 
 type NPC struct {
-	X, Y     float64
-	Texture  int
-	Width    float64
-	Height   float64
-	Distance float64
-	DialogText string
-    ShowDialog bool
-    DialogTimer int
-	Hitbox   struct {
+	X, Y        float64
+	Texture     int
+	Width       float64
+	Height      float64
+	Distance    float64
+	DialogText  string
+	ShowDialog  bool
+	DialogTimer int
+	Hitbox      struct {
 		Radius float64
 	}
 }
@@ -54,6 +54,6 @@ type NPCManager struct {
 }
 
 type DialogRenderer struct {
-    Font   *ttf.Font
-    Loaded bool
+	Font   *ttf.Font
+	Loaded bool
 }

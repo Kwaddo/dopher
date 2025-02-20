@@ -1,9 +1,9 @@
 package graphics
 
 import (
-	DM "doom/internal/model"
-	MC "doom/internal/char/player"
 	NPC "doom/internal/char/npc"
+	MC "doom/internal/char/player"
+	DM "doom/internal/model"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -65,7 +65,7 @@ func RenderSlices(player *MC.Player, DynamicFOV float64, renderChan chan<- []*Re
 }
 
 func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float64, zBuffer []float64) []*RenderSlice {
-    sprites := make([]*RenderSlice, 0, len(npcManager.NPCs))
+	sprites := make([]*RenderSlice, 0, len(npcManager.NPCs))
 	npcManager.UpdateDistances(player.X, player.Y)
 
 	for _, npc := range npcManager.NPCs {
