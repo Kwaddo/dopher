@@ -13,14 +13,17 @@ func NewNPCManager() *NPCManager {
 	return &NPCManager{
 		NPCs: []*DM.NPC{
 			{
-				X:       450, // Positioned at x=450
+				X:       450,
 				Y:       450,
 				Texture: 2,
 				Width:   64,
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{
-					Radius: 24, // Collision radius in game units
-				},
+					Radius: 24,
+					},
+				DialogText: "Hello traveler!",
+				ShowDialog: false,
+				DialogTimer: 0,
 			},
 		},
 	}
@@ -34,7 +37,7 @@ func (nm *NPCManager) AddNPC(x, y float64, texture int) {
 		Width:   50,
 		Height:  100,
 		Hitbox: struct{ Radius float64 }{
-			Radius: 25, // Default collision radius
+			Radius: 25,
 		},
 	}
 	nm.NPCs = append(nm.NPCs, npc)
@@ -54,6 +57,31 @@ func (nm *NPCManager) SortByDistance() {
 		for j := 0; j < len(nm.NPCs)-i-1; j++ {
 			if nm.NPCs[j].Distance < nm.NPCs[j+1].Distance {
 				nm.NPCs[j], nm.NPCs[j+1] = nm.NPCs[j+1], nm.NPCs[j]
+			}
+		}
+	}
+}
+
+func (nm *NPCManager) CheckInteraction(playerX, playerY float64) {
+	for _, npc := range nm.NPCs {
+		dx := playerX - npc.X
+		dy := playerY - npc.Y
+		distSquared := dx*dx + dy*dy
+
+		// Check if player is within interaction range (slightly larger than hitbox)
+		if distSquared < 100*100 && !npc.ShowDialog {
+			npc.ShowDialog = true
+			npc.DialogTimer = 180 // Show dialog for 3 seconds (60 fps * 3)
+		}
+	}
+}
+
+func (nm *NPCManager) UpdateDialogs() {
+	for _, npc := range nm.NPCs {
+		if npc.ShowDialog {
+			npc.DialogTimer--
+			if npc.DialogTimer <= 0 {
+				npc.ShowDialog = false
 			}
 		}
 	}

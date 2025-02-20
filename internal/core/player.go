@@ -9,7 +9,7 @@ import (
 
 type Player DM.Player
 
-func (p *Player) Movement(state []uint8) bool {
+func (p *Player) Movement(state []uint8, npc *NPCManager) bool {
 	// Store current position for collision check
 	oldX := p.X
 	oldY := p.Y
@@ -60,6 +60,9 @@ func (p *Player) Movement(state []uint8) bool {
 	}
 	if state[sdl.SCANCODE_ESCAPE] == 1 || state[sdl.SCANCODE_Q] == 1 {
 		return true
+	}
+	if state[sdl.SCANCODE_E] == 1 {
+		npc.CheckInteraction(p.X, p.Y)
 	}
 	if isMoving {
 		p.Walking = true

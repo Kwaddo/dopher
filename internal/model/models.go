@@ -1,6 +1,10 @@
 package model
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"github.com/veandco/go-sdl2/ttf"
+	"github.com/veandco/go-sdl2/sdl"
+)
+	
 
 type Player struct {
 	X, Y      float64
@@ -26,6 +30,9 @@ type NPC struct {
 	Width    float64
 	Height   float64
 	Distance float64
+	DialogText string
+    ShowDialog bool
+    DialogTimer int
 	Hitbox   struct {
 		Radius float64
 	}
@@ -33,4 +40,9 @@ type NPC struct {
 
 type NPCManager struct {
 	NPCs []*NPC
+}
+
+type DialogRenderer struct {
+    Font   *ttf.Font
+    Loaded bool
 }

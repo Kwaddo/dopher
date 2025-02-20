@@ -35,6 +35,13 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 	// Create a z-buffer to store wall distances
 	zBuffer := make([]float64, DM.ScreenWidth)
 
+	// Initialize dialog renderer
+	dialogRenderer, err := NewDialogRenderer()
+	if err != nil {
+		panic(err)
+	}
+	defer dialogRenderer.Close()
+
 	for {
 		// Handle events
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -45,7 +52,7 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 		}
 
 		// Player controls
-		end := player.Movement(sdl.GetKeyboardState())
+		end := player.Movement(sdl.GetKeyboardState(), npcManager)
 		if end {
 			break
 		}
@@ -68,6 +75,9 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 		for i := range zBuffer {
 			zBuffer[i] = math.MaxFloat64
 		}
+
+		// Update NPC dialogs
+		npcManager.UpdateDialogs()
 
 		// Render Scene
 		renderer.SetDrawColor(0, 0, 0, 255)
@@ -139,6 +149,15 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 
 						renderer.Copy(texture, srcColumnRect, columnRect)
 					}
+				}
+			}
+		}
+
+		for _, npc := range npcManager.NPCs {
+			if npc.ShowDialog {
+				err := dialogRenderer.RenderDialog(renderer, npc.DialogText)
+				if err != nil {
+					continue
 				}
 			}
 		}
