@@ -46,6 +46,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 ### Installing Dependencies
 
 On Ubuntu/Debian:
+
 ```bash
 sudo apt-get install libsdl2-dev libsdl2-ttf-dev
 ```
