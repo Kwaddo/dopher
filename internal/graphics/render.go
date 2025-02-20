@@ -34,7 +34,8 @@ func RenderSlices(player *MC.Player, DynamicFOV float64, renderChan chan<- []*Re
 		}
 
 		darkness := uint8(math.Min(255, math.Max(0, distance/3)))
-		wallTop := (DM.ScreenHeight - wallHeight) / 2
+		// Apply head bobbing to wall position
+		wallTop := (DM.ScreenHeight-wallHeight)/2 + player.BobOffset
 
 		// Improved texture coordinate calculation
 		var texCoord int32

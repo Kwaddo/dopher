@@ -118,6 +118,22 @@ func (p *Player) Movement(state []uint8, npc *NPC.NPCManager) bool {
 		}
 	}
 
+	// Update head bobbing
+	if p.Walking {
+		bobSpeed := 0.1
+		if p.Running {
+			bobSpeed = 0.15
+		}
+		bobAmplitude := 8.0
+
+		p.BobCycle += bobSpeed
+		p.BobOffset = math.Sin(p.BobCycle) * bobAmplitude
+	} else {
+		// Smoothly return to center when not moving
+		p.BobOffset *= 0.8
+		p.BobCycle = 0
+	}
+
 	return state[sdl.SCANCODE_ESCAPE] == 1
 }
 

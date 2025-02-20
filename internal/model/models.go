@@ -12,6 +12,8 @@ type Player struct {
 	VelocityY float64
 	Walking   bool
 	Running   bool
+	BobOffset float64
+	BobCycle  float64
 }
 
 type RenderSlice struct {
