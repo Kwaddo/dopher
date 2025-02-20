@@ -1,19 +1,11 @@
-package core
+package graphics
 
 import (
 	DM "doom/internal/model"
 	"math"
 )
 
-type RayHit struct {
-	Distance   float64
-	WallType   int
-	HitPointX  float64
-	HitPointY  float64
-	IsVertical bool
-}
-
-func CastRay(startX, startY, angle float64) RayHit {
+func CastRay(startX, startY, angle float64) *DM.RayHit {
 	// Normalize angle
 	for angle < 0 {
 		angle += 2 * math.Pi
@@ -72,7 +64,7 @@ func CastRay(startX, startY, angle float64) RayHit {
 
 		// Check if ray has hit a wall
 		if mapX < 0 || mapX >= len(WM[0]) || mapY < 0 || mapY >= len(WM) {
-			return RayHit{Distance: DM.MaxDepth, WallType: 0}
+			return &DM.RayHit{Distance: DM.MaxDepth, WallType: 0}
 		}
 
 		if WM[mapY][mapX] > 0 {
@@ -83,7 +75,7 @@ func CastRay(startX, startY, angle float64) RayHit {
 				distance = (float64(mapY) - startY/100 + (1-float64(stepY))/2) / rayY * 100
 			}
 
-			return RayHit{
+			return &DM.RayHit{
 				Distance:   distance,
 				WallType:   WM[mapY][mapX],
 				HitPointX:  startX + rayX*distance,

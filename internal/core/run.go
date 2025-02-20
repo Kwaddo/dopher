@@ -2,14 +2,17 @@ package core
 
 import (
 	DM "doom/internal/model"
+	NPC "doom/internal/char/npc"
+	MC "doom/internal/char/player"
+	Graphics "doom/internal/graphics"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func GameLoop(renderer *sdl.Renderer, player *Player) {
+func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	// Load wall textures
-	textures, err := LoadTextures(renderer)
+	textures, err := Graphics.LoadTextures(renderer)
 	if err != nil {
 		panic(err)
 	}
@@ -26,17 +29,17 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 	const lerpSpeed = 0.15
 
 	// Create a channel for render slices
-	renderChan := make(chan []RenderSlice, 1)
+	renderChan := make(chan []*Graphics.RenderSlice, 1)
 
 	// Initialize NPC manager globally
-	npcManager := NewNPCManager()
-	GlobalNPCManager = npcManager // Set the global reference
+	npcManager := NPC.NewNPCManager()
+	NPC.GlobalNPCManager = npcManager // Set the global reference
 
 	// Create a z-buffer to store wall distances
 	zBuffer := make([]float64, DM.ScreenWidth)
 
 	// Initialize dialog renderer
-	dialogRenderer, err := NewDialogRenderer()
+	dialogRenderer, err := NPC.NewDialogRenderer()
 	if err != nil {
 		panic(err)
 	}
@@ -64,7 +67,7 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 			targetFOV = DM.FOV
 		}
 
-		currentFOV = LERP(currentFOV, targetFOV, lerpSpeed)
+		currentFOV = MC.LERP(currentFOV, targetFOV, lerpSpeed)
 		DynamicFOV = currentFOV
 
 		// Update NPC distances
@@ -87,7 +90,7 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 		renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
 
 		// Start goroutine to calculate render slices
-		go RenderSlices(player, DynamicFOV, renderChan)
+		go Graphics.RenderSlices(player, DynamicFOV, renderChan)
 
 		// Receive and render the slices
 		renderSlices := <-renderChan
@@ -115,7 +118,7 @@ func GameLoop(renderer *sdl.Renderer, player *Player) {
 		}
 
 		// After rendering wall slices and updating z-buffer
-		sprites := RenderNPCs(player, npcManager, DynamicFOV, zBuffer)
+		sprites := Graphics.RenderNPCs(player, npcManager, DynamicFOV, zBuffer)
 		for _, sprite := range sprites {
 			if texture, ok := textures.Textures[sprite.WallType]; ok {
 				texture.SetColorMod(255-sprite.Darkness, 255-sprite.Darkness, 255-sprite.Darkness)

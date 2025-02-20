@@ -1,4 +1,4 @@
-package core
+package npc
 
 import (
     DM "doom/internal/model"

@@ -1,7 +1,8 @@
-package core
+package player
 
 import (
 	DM "doom/internal/model"
+	NPC "doom/internal/char/npc"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -9,7 +10,7 @@ import (
 
 type Player DM.Player
 
-func (p *Player) Movement(state []uint8, npc *NPCManager) bool {
+func (p *Player) Movement(state []uint8, npc *NPC.NPCManager) bool {
 	// Store current position for collision check
 	oldX := p.X
 	oldY := p.Y
@@ -106,7 +107,7 @@ func (p *Player) Movement(state []uint8, npc *NPCManager) bool {
 	}
 
 	// After calculating new position, check for NPC collisions
-	if npcManager := GlobalNPCManager; npcManager != nil {
+	if npcManager := NPC.GlobalNPCManager; npcManager != nil {
 		if npcManager.CheckNPCCollision(p.X, p.Y) {
 			// Collision detected, revert position
 			p.X = oldX

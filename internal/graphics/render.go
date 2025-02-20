@@ -1,7 +1,9 @@
-package core
+package graphics
 
 import (
 	DM "doom/internal/model"
+	MC "doom/internal/char/player"
+	NPC "doom/internal/char/npc"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -9,8 +11,8 @@ import (
 
 type RenderSlice DM.RenderSlice
 
-func RenderSlices(player *Player, DynamicFOV float64, renderChan chan<- []RenderSlice) {
-	slices := make([]RenderSlice, DM.NumRays)
+func RenderSlices(player *MC.Player, DynamicFOV float64, renderChan chan<- []*RenderSlice) {
+	slices := make([]*RenderSlice, DM.NumRays)
 
 	// Adjust ray angle calculation to ensure full coverage
 	rayAngleStep := DynamicFOV / float64(DM.NumRays-1) // Subtract 1 to include last ray
@@ -42,7 +44,7 @@ func RenderSlices(player *Player, DynamicFOV float64, renderChan chan<- []Render
 			texCoord = int32(math.Mod(rayResult.HitPointX, 100) * 0.64)
 		}
 
-		slices[i] = RenderSlice{
+		slices[i] = &RenderSlice{
 			DstRect: &sdl.Rect{
 				X: int32(float64(i) * rayWidth),
 				Y: int32(wallTop),
@@ -62,10 +64,8 @@ func RenderSlices(player *Player, DynamicFOV float64, renderChan chan<- []Render
 	renderChan <- slices
 }
 
-func RenderNPCs(player *Player, npcManager *NPCManager, DynamicFOV float64, zBuffer []float64) []RenderSlice {
-	var sprites []RenderSlice
-
-	// Sort NPCs by distance for correct rendering
+func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float64, zBuffer []float64) []*RenderSlice {
+    sprites := make([]*RenderSlice, 0, len(npcManager.NPCs))
 	npcManager.UpdateDistances(player.X, player.Y)
 
 	for _, npc := range npcManager.NPCs {
@@ -116,7 +116,7 @@ func RenderNPCs(player *Player, npcManager *NPCManager, DynamicFOV float64, zBuf
 
 		darkness := uint8(math.Min(255, math.Max(0, distance/3)))
 
-		sprites = append(sprites, RenderSlice{
+		sprites = append(sprites, &RenderSlice{
 			DstRect: &sdl.Rect{
 				X: startX,
 				Y: int32(spriteTop),

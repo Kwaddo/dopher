@@ -2,6 +2,7 @@ package main
 
 import (
 	Game "doom/internal/core"
+	MC "doom/internal/char/player"
 	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -26,7 +27,7 @@ func main() {
 	}
 	defer renderer.Destroy()
 
-	player := &Game.Player{
+	player := &MC.Player{
 		X:     150,
 		Y:     150,
 		Angle: 0,

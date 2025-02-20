@@ -1,4 +1,4 @@
-package core
+package npc
 
 import (
 	DM "doom/internal/model"
@@ -58,20 +58,6 @@ func (nm *NPCManager) SortByDistance() {
 			if nm.NPCs[j].Distance < nm.NPCs[j+1].Distance {
 				nm.NPCs[j], nm.NPCs[j+1] = nm.NPCs[j+1], nm.NPCs[j]
 			}
-		}
-	}
-}
-
-func (nm *NPCManager) CheckInteraction(playerX, playerY float64) {
-	for _, npc := range nm.NPCs {
-		dx := playerX - npc.X
-		dy := playerY - npc.Y
-		distSquared := dx*dx + dy*dy
-
-		// Check if player is within interaction range (slightly larger than hitbox)
-		if distSquared < 100*100 && !npc.ShowDialog {
-			npc.ShowDialog = true
-			npc.DialogTimer = 180 // Show dialog for 3 seconds (60 fps * 3)
 		}
 	}
 }

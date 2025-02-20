@@ -4,7 +4,6 @@ import (
 	"github.com/veandco/go-sdl2/ttf"
 	"github.com/veandco/go-sdl2/sdl"
 )
-	
 
 type Player struct {
 	X, Y      float64
@@ -22,6 +21,18 @@ type RenderSlice struct {
 	WallType int
 	TexCoord int32
 	Distance float64
+}
+
+type RayHit struct {
+	Distance   float64
+	WallType   int
+	HitPointX  float64
+	HitPointY  float64
+	IsVertical bool
+}
+
+type TextureMap struct {
+	Textures map[int]*sdl.Texture
 }
 
 type NPC struct {

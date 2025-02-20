@@ -1,15 +1,12 @@
-package core
+package graphics
 
 import (
+	DM "doom/internal/model"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type TextureMap struct {
-	Textures map[int]*sdl.Texture
-}
-
-func LoadTextures(renderer *sdl.Renderer) (*TextureMap, error) {
-	textures := &TextureMap{
+func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
+	textures := &DM.TextureMap{
 		Textures: make(map[int]*sdl.Texture),
 	}
 
