@@ -16,6 +16,6 @@ const (
 )
 
 var (
-	ScreenWidth float64
+	ScreenWidth  float64
 	ScreenHeight float64
 )
