@@ -33,7 +33,7 @@ func RenderSlices(player *MC.Player, DynamicFOV float64, renderChan chan<- []*Re
 			wallHeight = DM.ScreenHeight
 		}
 
-		darkness := uint8(math.Min(255, math.Max(0, distance/3)))
+		darkness := CalculateDarkness(distance)
 		// Apply head bobbing to wall position
 		wallTop := (DM.ScreenHeight-wallHeight)/2 + player.BobOffset
 
@@ -115,7 +115,7 @@ func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float6
 			continue
 		}
 
-		darkness := uint8(math.Min(255, math.Max(0, distance/3)))
+		darkness := CalculateDarkness(distance)
 
 		sprites = append(sprites, &RenderSlice{
 			DstRect: &sdl.Rect{

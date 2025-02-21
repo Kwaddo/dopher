@@ -14,4 +14,5 @@ const (
 	BaseMaxSpeed     = 5.0
 	Friction         = 0.15
 	SprintMultiplier = 1.8
+	MaxDarkness      = 255
 )

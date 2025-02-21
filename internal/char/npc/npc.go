@@ -15,7 +15,7 @@ func NewNPCManager() *NPCManager {
 			{
 				X:       450,
 				Y:       450,
-				Texture: 2,
+				Texture: 3,
 				Width:   64,
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{

@@ -62,7 +62,7 @@ func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 
 		// Smooth FOV transition
 		if player.Running {
-			targetFOV = DM.FOV * 0.95
+			targetFOV = DM.FOV * 0.90
 		} else {
 			targetFOV = DM.FOV
 		}

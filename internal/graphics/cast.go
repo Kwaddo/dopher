@@ -85,3 +85,7 @@ func CastRay(startX, startY, angle float64) *DM.RayHit {
 		}
 	}
 }
+
+func CalculateDarkness(distance float64) uint8 {
+    return uint8(math.Min(DM.MaxDarkness, math.Max(0, distance/3)))
+}
