@@ -1,5 +1,7 @@
 package npc
 
+import "math"
+
 func (nm *NPCManager) CheckNPCCollision(x, y float64) bool {
 	for _, npc := range nm.NPCs {
 		dx := x - npc.X
@@ -14,16 +16,35 @@ func (nm *NPCManager) CheckNPCCollision(x, y float64) bool {
 	return false
 }
 
-func (nm *NPCManager) CheckInteraction(playerX, playerY float64) {
+func (nm *NPCManager) CheckInteraction(playerX, playerY, playerAngle float64) {
+	for _, npc := range nm.NPCs {
+		npc.ShowDialog = false // Reset dialog for all NPCs
+	}
+
 	for _, npc := range nm.NPCs {
 		dx := playerX - npc.X
 		dy := playerY - npc.Y
 		distSquared := dx*dx + dy*dy
 
-		// Check if player is within interaction range (slightly larger than hitbox)
+		// Check distance first
 		if distSquared < 100*100 && !npc.ShowDialog {
-			npc.ShowDialog = true
-			npc.DialogTimer = 180 // Show dialog for 3 seconds (60 fps * 3)
+			// Now check if player is facing NPC
+			angleToNPC := math.Atan2(-dy, -dx) // negative if you want forward angle
+			angleDiff := angleToNPC - playerAngle
+
+			// Normalize angleDiff to [-π, π]
+			for angleDiff > math.Pi {
+				angleDiff -= 2 * math.Pi
+			}
+			for angleDiff < -math.Pi {
+				angleDiff += 2 * math.Pi
+			}
+
+			// Only show if within ~45° to either side
+			if math.Abs(angleDiff) < math.Pi/4 {
+				npc.ShowDialog = true
+				npc.DialogTimer = 180
+			}
 		}
 	}
 }

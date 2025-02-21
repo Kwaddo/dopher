@@ -96,7 +96,7 @@ func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float6
 		spriteWidth := spriteHeight * (npc.Width / npc.Height)
 
 		spriteScreenX := (DM.ScreenWidth / 2) + math.Tan(spriteAngle)*DM.ScreenWidth/DynamicFOV
-		spriteTop := (DM.ScreenHeight - spriteHeight) / 2
+		spriteTop := (DM.ScreenHeight-spriteHeight)/2 + player.BobOffset // Apply head bobbing offset
 
 		// Check z-buffer for visibility
 		startX := int32(spriteScreenX - spriteWidth/2)
