@@ -16,7 +16,7 @@ func CheckCollision(x, y float64) bool {
 		mapY := int(checkY / 100)
 
 		if mapX >= 0 && mapX < len(WM[0]) && mapY >= 0 && mapY < len(WM) {
-			if WM[mapY][mapX] == 1 {
+			if WM[mapY][mapX] != 0 {
 				return true
 			}
 		}

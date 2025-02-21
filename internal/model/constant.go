@@ -3,8 +3,6 @@ package model
 import "math"
 
 const (
-	ScreenWidth      = 1500
-	ScreenHeight     = 900
 	FOV              = math.Pi / 3.5
 	NumRays          = 120
 	MaxDepth         = 800.0
@@ -15,4 +13,9 @@ const (
 	Friction         = 0.15
 	SprintMultiplier = 1.8
 	MaxDarkness      = 255
+)
+
+var (
+	ScreenWidth float64
+	ScreenHeight float64
 )

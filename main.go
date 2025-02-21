@@ -9,13 +9,16 @@ import (
 )
 
 func main() {
+	DM.ScreenWidth = 1500
+	DM.ScreenHeight = 900
+
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
 	defer sdl.Quit()
 
 	window, err := sdl.CreateWindow("Dopher Engine", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
-		DM.ScreenWidth, DM.ScreenHeight, sdl.WINDOW_SHOWN)
+		int32(DM.ScreenWidth), int32(DM.ScreenHeight), sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}

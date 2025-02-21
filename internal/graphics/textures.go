@@ -15,6 +15,7 @@ func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 		1: "assets/wall.bmp",
 		2: "assets/wall2.bmp",
 		3: "assets/npc.bmp",
+		4: "assets/beef.bmp",
 	}
 
 	for textureType, file := range textureFiles {

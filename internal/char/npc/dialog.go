@@ -53,8 +53,8 @@ func (dr *DialogRenderer) RenderDialog(renderer *sdl.Renderer, text string) erro
 	textH := surface.H
 
 	return renderer.Copy(texture, nil, &sdl.Rect{
-		X: int32(DM.ScreenWidth/2 - textW/2),
-		Y: int32(DM.ScreenHeight - textH - 20),
+		X: int32(int32(DM.ScreenWidth/2) - textW/2),
+		Y: int32(int32(DM.ScreenHeight) - textH - 20),
 		W: int32(textW),
 		H: int32(textH),
 	})
