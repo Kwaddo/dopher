@@ -82,7 +82,6 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 	return state[sdl.SCANCODE_ESCAPE] == 1
 }
 
-
 func AccelerationAndMaxSpeed(p *Player, state []uint8) (float64, float64, bool) {
 	isMoving := state[sdl.SCANCODE_W] == 1 ||
 		state[sdl.SCANCODE_S] == 1 ||
