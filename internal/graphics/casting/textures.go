@@ -1,4 +1,4 @@
-package graphics
+package casting
 
 import (
 	DM "doom/internal/model"

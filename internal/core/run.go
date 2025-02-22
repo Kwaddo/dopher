@@ -3,7 +3,8 @@ package core
 import (
 	NPC "doom/internal/char/npc"
 	MC "doom/internal/char/player"
-	Graphics "doom/internal/graphics"
+	Graphics "doom/internal/graphics/renders"
+	Casts "doom/internal/graphics/casting"
 	DM "doom/internal/model"
 	"math"
 
@@ -12,7 +13,7 @@ import (
 
 func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	// Load wall textures
-	textures, err := Graphics.LoadTextures(renderer)
+	textures, err := Casts.LoadTextures(renderer)
 	if err != nil {
 		panic(err)
 	}

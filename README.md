@@ -28,6 +28,12 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Configurable display settings and game parameters
 - Simple 2D map system with extensible layout
 - Z-buffer implementation for proper depth sorting
+- Head bobbing effect during movement
+- Smooth floor rendering with distance-based shading
+- Multiple wall textures support
+- Fullscreen toggle support (F key)
+- Optimized rendering with goroutines
+- Transparent sprite rendering with proper depth testing
 
 ## Controls
 
@@ -76,32 +82,41 @@ go run main.go
 
 ```struct
 dopher/
-├── main.go                 # Main entry point
-├── assets/                 # Game assets
-│   ├── wall.bmp           # Wall texture
-│   ├── npc.bmp            # NPC sprite
-│   └── dogicapixel.ttf    # Dialog font
-├── internal/
-│   ├── model/             # Data models and constants
-│   │   ├── constant.go    # Game settings and dimensions
-│   │   ├── maps.go        # Map definitions
-│   │   └── models.go      # Type definitions
-│   ├── graphics/          # Graphics and rendering
-│   │   ├── cast.go        # Raycasting implementation
-│   │   ├── render.go      # Rendering engine
-│   │   └── textures.go    # Texture management
-│   ├── char/              # Character systems
-│   │   ├── player/        # Player mechanics
-│   │   │   ├── checker.go # Collision detection
-│   │   │   └── movement.go# Movement and physics
-│   │   └── npc/          # NPC systems
-│   │       ├── checker.go # NPC collision and interaction
-│   │       ├── dialog.go  # Dialog rendering system
-│   │       └── npc.go     # NPC management
-│   └── core/              # Core game systems
-│       └── run.go         # Game loop and initialization
+├── assets
+│   ├── beef.bmp
+│   ├── dogicapixel.ttf
+│   ├── logo.png
+│   ├── npc.bmp
+│   ├── wall2.bmp
+│   └── wall.bmp
+├── internal
+│   ├── char
+│   │   ├── npc
+│   │   │   ├── checker.go
+│   │   │   ├── dialog.go
+│   │   │   └── npc.go
+│   │   └── player
+│   │       ├── checker.go
+│   │       └── movement.go
+│   ├── core
+│   │   └── run.go
+│   ├── graphics
+│   │   ├── casting
+│   │   │   ├── cast.go
+│   │   │   └── textures.go
+│   │   └── renders
+│   │       ├── floor.go
+│   │       ├── npc.go
+│   │       ├── scene.go
+│   │       └── slices.go
+│   └── model
+│       ├── constant.go
+│       ├── maps.go
+│       └── models.go
 ├── go.mod
-└── go.sum
+├── go.sum
+├── main.go
+└── README.md
 ```
 
 ### Technical Details
@@ -110,9 +125,15 @@ dopher/
 - Z-buffer implementation for proper depth sorting
 - Texture mapping with perspective correction
 - Sprite system with transparency and occlusion
-- Physics-based movement system
+- Physics-based movement system with momentum
 - Dialog system with typewriter effect
 - Dynamic FOV system with smooth transitions
+- Multi-threaded rendering pipeline
+- Distance-based fog and shading system
+- Collision detection using ray-circle intersection
+- Head bobbing animation system
+- Advanced floor rendering with gradient shading
+- Smooth state transitions using LERP
 
 ### Acknowledgements
 
