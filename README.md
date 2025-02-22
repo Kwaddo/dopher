@@ -90,6 +90,7 @@ dopher/
 │   ├── dogicapixel.ttf
 │   ├── logo.png
 │   ├── npc.bmp
+│   ├── preview.gif
 │   ├── wall2.bmp
 │   └── wall.bmp
 ├── internal
