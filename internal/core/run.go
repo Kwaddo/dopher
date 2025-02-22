@@ -3,8 +3,8 @@ package core
 import (
 	NPC "doom/internal/char/npc"
 	MC "doom/internal/char/player"
-	Graphics "doom/internal/graphics/renders"
 	Casts "doom/internal/graphics/casting"
+	Graphics "doom/internal/graphics/renders"
 	DM "doom/internal/model"
 	"math"
 

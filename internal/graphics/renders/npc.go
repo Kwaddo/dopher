@@ -3,10 +3,10 @@ package renders
 import (
 	NPC "doom/internal/char/npc"
 	MC "doom/internal/char/player"
-	DM "doom/internal/model"
 	Casts "doom/internal/graphics/casting"
-	"math"
+	DM "doom/internal/model"
 	"github.com/veandco/go-sdl2/sdl"
+	"math"
 )
 
 func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float64, zBuffer []float64) []*RenderSlice {

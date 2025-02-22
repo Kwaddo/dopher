@@ -1,9 +1,9 @@
 package renders
 
 import (
+	MC "doom/internal/char/player"
 	Casts "doom/internal/graphics/casting"
 	DM "doom/internal/model"
-	MC "doom/internal/char/player"
 	"github.com/veandco/go-sdl2/sdl"
 	"math"
 )
