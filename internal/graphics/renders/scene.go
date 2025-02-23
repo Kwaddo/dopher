@@ -12,13 +12,13 @@ func RenderScene(
 	renderer *sdl.Renderer,
 	textures *DM.TextureMap,
 	player *MC.Player,
-	pDynamicFOV *float64, 
+	pDynamicFOV *float64,
 	renderChan chan []*RenderSlice,
 	pZBuffer *[]float64,
 	npcManager *NPC.NPCManager,
 	dialogRenderer *NPC.DialogRenderer,
-	pShowMap *bool, 
-	pShowMegaMap *bool, 
+	pShowMap *bool,
+	pShowMegaMap *bool,
 ) {
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
