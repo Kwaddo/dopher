@@ -12,11 +12,13 @@ func RenderScene(
 	renderer *sdl.Renderer,
 	textures *DM.TextureMap,
 	player *MC.Player,
-	DynamicFOV float64,
+	pDynamicFOV *float64, 
 	renderChan chan []*RenderSlice,
-	zBuffer []float64,
+	pZBuffer *[]float64,
 	npcManager *NPC.NPCManager,
 	dialogRenderer *NPC.DialogRenderer,
+	pShowMap *bool, 
+	pShowMegaMap *bool, 
 ) {
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
@@ -27,8 +29,8 @@ func RenderScene(
 	// Start goroutine to calculate floor slices
 	RenderFloor(renderer, player)
 
-	// Start goroutine to calculate wall slices
-	go RenderSlices(player, DynamicFOV, renderChan)
+	// Pass pointer to FOV
+	go RenderSlices(player, *pDynamicFOV, renderChan)
 
 	// Receive and render the slices
 	wallSlices := <-renderChan
@@ -43,11 +45,11 @@ func RenderScene(
 			}
 			renderer.Copy(texture, srcRect, slice.DstRect)
 
-			// Store wall distance in z-buffer
+			// Use pointer to zBuffer
 			screenX := int(slice.DstRect.X)
 			for x := screenX; x < screenX+int(slice.DstRect.W) && x < int(DM.ScreenWidth); x++ {
-				if x >= 0 && x < len(zBuffer) {
-					zBuffer[x] = slice.Distance
+				if x >= 0 && x < len(*pZBuffer) {
+					(*pZBuffer)[x] = slice.Distance
 				}
 			}
 		}
@@ -56,7 +58,8 @@ func RenderScene(
 	// Now start a goroutine to compute the NPC slices (no direct rendering!)
 	npcRenderChan := make(chan []*RenderSlice, 1)
 	go func() {
-		npcSlices := RenderNPCs(player, npcManager, DynamicFOV, zBuffer)
+		// Pass pointer to zBuffer
+		npcSlices := RenderNPCs(player, npcManager, *pDynamicFOV, *pZBuffer)
 		npcRenderChan <- npcSlices
 	}()
 
@@ -69,8 +72,9 @@ func RenderScene(
 
 			dstRect := sprite.DstRect
 			for x := dstRect.X; x < dstRect.X+dstRect.W; x++ {
-				if x >= 0 && x < int32(len(zBuffer)) {
-					if sprite.Distance > zBuffer[x] {
+				if x >= 0 && x < int32(len(*pZBuffer)) {
+					// Use pointer to zBuffer for comparison
+					if sprite.Distance > (*pZBuffer)[x] {
 						continue
 					}
 
@@ -102,6 +106,13 @@ func RenderScene(
 				continue
 			}
 		}
+	}
+
+	// Use pointers for map visibility flags
+	if *pShowMegaMap {
+		RenderMegaMap(renderer, player, *pShowMegaMap)
+	} else {
+		RenderMinimap(renderer, player, *pShowMap)
 	}
 
 	renderer.Present()

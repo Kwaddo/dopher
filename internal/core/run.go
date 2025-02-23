@@ -12,34 +12,37 @@ import (
 )
 
 func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
-	// Load wall textures
 	textures, err := Casts.LoadTextures(renderer)
 	if err != nil {
 		panic(err)
 	}
-	// Clean up textures
 	defer func() {
 		for _, texture := range textures.Textures {
 			texture.Destroy()
 		}
 	}()
 
-	var DynamicFOV float64
+	// Convert FOV variables to pointers
 	var currentFOV = DM.FOV
 	var targetFOV = DM.FOV
+	var DynamicFOV = currentFOV
+
+	// Pass a pointer to these variables
+	pCurrentFOV := &currentFOV
+	pTargetFOV := &targetFOV
+	pDynamicFOV := &DynamicFOV
+
 	const lerpSpeed = 0.15
 
-	// Create a channel for render slices
 	renderChan := make(chan []*Graphics.RenderSlice, 1)
 
-	// Initialize NPC manager globally
 	npcManager := NPC.NewNPCManager()
-	NPC.GlobalNPCManager = npcManager // Set the global reference
+	NPC.GlobalNPCManager = npcManager
 
-	// Create a z-buffer to store wall distances
-	zBuffer := make([]float64, int(DM.ScreenWidth))
+	// Make zBuffer a pointer to a slice
+	zBuf := make([]float64, int(DM.ScreenWidth))
+	pZBuf := &zBuf
 
-	// Initialize dialog renderer
 	dialogRenderer, err := NPC.NewDialogRenderer()
 	if err != nil {
 		panic(err)
@@ -51,11 +54,16 @@ func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 		panic(err)
 	}
 
-	for {
-		// Handle events
-		HandleEvents(window, renderer, &zBuffer) // pass zBuffer as pointer so we can reassign
+	// Convert these into pointers
+	showMiniMap := true
+	showMegaMap := false
+	pShowMiniMap := &showMiniMap
+	pShowMegaMap := &showMegaMap
 
-		// Player controls
+	for {
+		// Updated signature uses pointers
+		HandleEvents(window, renderer, pZBuf, pShowMiniMap, pShowMegaMap)
+
 		end := player.Movement(sdl.GetKeyboardState(), npcManager)
 		if end {
 			break
@@ -63,62 +71,68 @@ func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 
 		// Smooth FOV transition
 		if player.Running {
-			targetFOV = DM.FOV * 0.92
+			*pTargetFOV = DM.FOV * 0.92
 		} else {
-			targetFOV = DM.FOV
+			*pTargetFOV = DM.FOV
 		}
 
-		currentFOV = MC.LERP(currentFOV, targetFOV, lerpSpeed)
-		DynamicFOV = currentFOV
+		*pCurrentFOV = MC.LERP(*pCurrentFOV, *pTargetFOV, lerpSpeed)
+		*pDynamicFOV = *pCurrentFOV
 
-		// Update NPC distances
 		npcManager.UpdateDistances(player.X, player.Y)
 		npcManager.SortByDistance()
 
 		// Clear z-buffer
-		for i := range zBuffer {
-			zBuffer[i] = math.MaxFloat64
+		for i := range *pZBuf {
+			(*pZBuf)[i] = math.MaxFloat64
 		}
 
-		// Update NPC dialogs
 		npcManager.UpdateDialogs()
 
-		// Render Scene
-		Graphics.RenderScene(renderer, textures, player, DynamicFOV, renderChan, zBuffer, npcManager, dialogRenderer)
+		// Pass pointers for the FOV and booleans
+		Graphics.RenderScene(renderer, textures, player, pDynamicFOV, renderChan, pZBuf, npcManager, dialogRenderer, pShowMiniMap, pShowMegaMap)
 
-		sdl.Delay(16) // ~60 FPS
+		sdl.Delay(16)
 	}
 }
 
-func HandleEvents(window *sdl.Window, renderer *sdl.Renderer, zBuffer *[]float64) {
+// Convert parameters to pointers
+func HandleEvents(window *sdl.Window, renderer *sdl.Renderer, zBuffer *[]float64, showMap *bool, showMegaMap *bool) {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
 			break
 
 		case *sdl.KeyboardEvent:
-			if t.Keysym.Sym == sdl.K_f && t.State == sdl.PRESSED {
-				// Toggle fullscreen mode
-				flags := window.GetFlags()
-				if flags&sdl.WINDOW_FULLSCREEN_DESKTOP == sdl.WINDOW_FULLSCREEN_DESKTOP {
-					window.SetFullscreen(0)
-					DM.ScreenWidth = 1500
-					DM.ScreenHeight = 900
-					renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
-					// Allocate a new slice for zBuffer so it can grow/shrink as needed
-					*zBuffer = make([]float64, int(DM.ScreenWidth))
-				} else {
-					window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
-					// Get the screen's surface
-					screenSurface, err := window.GetSurface()
-					if err != nil {
-						panic(err)
+			if t.State == sdl.PRESSED {
+				if t.Keysym.Sym == sdl.K_f {
+					flags := window.GetFlags()
+					if flags&sdl.WINDOW_FULLSCREEN_DESKTOP == sdl.WINDOW_FULLSCREEN_DESKTOP {
+						window.SetFullscreen(0)
+						DM.ScreenWidth = 1500
+						DM.ScreenHeight = 900
+						renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
+						*zBuffer = make([]float64, int(DM.ScreenWidth))
+					} else {
+						window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
+						screenSurface, err := window.GetSurface()
+						if err != nil {
+							panic(err)
+						}
+						DM.ScreenWidth = float64(screenSurface.W)
+						DM.ScreenHeight = float64(screenSurface.H)
+						renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
+						*zBuffer = make([]float64, int(DM.ScreenWidth))
 					}
-					DM.ScreenWidth = float64(screenSurface.W)
-					DM.ScreenHeight = float64(screenSurface.H)
-					renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
-					// Allocate a new slice for zBuffer so it can grow/shrink as needed
-					*zBuffer = make([]float64, int(DM.ScreenWidth))
+				}
+
+				if t.Keysym.Sym == sdl.K_TAB {
+					*showMap = !*showMap
+					*showMegaMap = false
+				}
+				if t.Keysym.Sym == sdl.K_m {
+					*showMegaMap = !*showMegaMap
+					*showMap = false
 				}
 			}
 		}

@@ -37,6 +37,11 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Fullscreen toggle support (F key)
 - Optimized rendering with goroutines
 - Transparent sprite rendering with proper depth testing
+- Minimap toggle (TAB key)
+- Fullscreen megamap toggle (M key)
+- Real-time player position and direction indicators
+- Multi-level visualization with different wall types
+- Semi-transparent map overlays
 
 ## Controls
 
@@ -45,6 +50,8 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Left Shift (hold): Sprint while moving
 - E: Interact with NPCs
 - ESC/Q: Quit game
+- TAB: Toggle minimap
+- M: Toggle fullscreen map
 
 ## Prerequisites
 
@@ -110,6 +117,8 @@ dopher/
 │   │   │   └── textures.go
 │   │   └── renders
 │   │       ├── floor.go
+│   │       ├── megamap.go
+│   │       ├── minimap.go
 │   │       ├── npc.go
 │   │       ├── scene.go
 │   │       └── slices.go
@@ -138,6 +147,10 @@ dopher/
 - Head bobbing animation system
 - Advanced floor rendering with gradient shading
 - Smooth state transitions using LERP
+- Dynamic map system with multiple visualization modes
+- Real-time player position tracking
+- Directional indicators with triangle rendering
+- Multi-layered map rendering with transparency
 
 ### Acknowledgements
 
