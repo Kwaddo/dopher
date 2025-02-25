@@ -90,6 +90,6 @@ func CalculateDarkness(distance float64) uint8 {
 	return uint8(math.Min(DM.MaxDarkness, math.Max(0, distance/3)))
 }
 
-func CalculateFloorDarkness(distance float64) float64 {
-	return distance / (float64(DM.ScreenHeight) / 1.75)
+func CalculateVerticalDarkness(distance float64) float64 {
+	return distance / (float64(DM.ScreenHeight))
 }

@@ -34,6 +34,8 @@ func main() {
 		X:     150,
 		Y:     150,
 		Angle: 0,
+		DefaultHeight: 64.0,
+		Height: 64.0,
 	}
 	Game.GameLoop(renderer, player)
 }

@@ -6,14 +6,17 @@ import (
 )
 
 type Player struct {
-	X, Y      float64
-	Angle     float64
-	VelocityX float64
-	VelocityY float64
-	Walking   bool
-	Running   bool
-	BobOffset float64
-	BobCycle  float64
+	X, Y          float64
+	Angle         float64
+	VelocityX     float64
+	VelocityY     float64
+	Walking       bool
+	Running       bool
+	Crouching     bool
+	Height        float64
+	DefaultHeight float64
+	BobOffset     float64
+	BobCycle      float64
 }
 
 type RenderSlice struct {

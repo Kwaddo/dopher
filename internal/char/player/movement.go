@@ -79,22 +79,37 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 		p.BobCycle = 0
 	}
 
+	// Update player height for crouching
+	UpdatePlayerHeight(p)
+
 	return state[sdl.SCANCODE_ESCAPE] == 1
 }
 
 func AccelerationAndMaxSpeed(p *Player, state []uint8) (float64, float64, bool) {
-	isMoving := state[sdl.SCANCODE_W] == 1 ||
-		state[sdl.SCANCODE_S] == 1 ||
-		state[sdl.SCANCODE_A] == 1 ||
-		state[sdl.SCANCODE_D] == 1
+	// Check if any movement key is pressed
+	isMoving := (state[sdl.SCANCODE_W] == 1 || state[sdl.SCANCODE_A] == 1 ||
+		state[sdl.SCANCODE_S] == 1 || state[sdl.SCANCODE_D] == 1)
 
+	// Speed multipliers
 	speedMultiplier := 1.0
-	if state[sdl.SCANCODE_LSHIFT] == 1 && isMoving {
-		speedMultiplier = DM.SprintMultiplier
+
+	// Handle running and crouching states
+	if state[sdl.SCANCODE_LSHIFT] == 1 && isMoving && !p.Crouching {
 		p.Running = true
+		speedMultiplier = 1.5 // Run faster
 	} else {
 		p.Running = false
 	}
+
+	// Check for crouch key (typically CTRL)
+	if state[sdl.SCANCODE_LCTRL] == 1 {
+		p.Crouching = true
+		speedMultiplier = 0.5 // Move slower while crouching
+		// You'll need to smoothly adjust height in the Movement method
+	} else {
+		p.Crouching = false
+	}
+
 	Acceleration := DM.BaseAcceleration * speedMultiplier
 	MaxSpeed := DM.BaseMaxSpeed * speedMultiplier
 
@@ -151,4 +166,17 @@ func FrictionAndLimitSpeed(p *Player, MaxSpeed float64) {
 // Example linear interpolation
 func LERP(start, end, t float64) float64 {
 	return start + t*(end-start)
+}
+
+// Add this method to handle camera height transitions
+func UpdatePlayerHeight(p *Player) {
+	if p.Crouching {
+		// Target height when crouched (50% of normal height instead of 60%)
+		targetHeight := p.DefaultHeight * 0.5 // Changed from 0.6 to 0.5
+		// Smoothly transition to crouched height
+		p.Height = LERP(p.Height, targetHeight, 0.2)
+	} else {
+		// Smoothly transition back to standing height
+		p.Height = LERP(p.Height, p.DefaultHeight, 0.2)
+	}
 }

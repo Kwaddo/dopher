@@ -28,6 +28,7 @@ func RenderScene(
 
 	// Start goroutine to calculate floor slices
 	RenderFloor(renderer, player)
+	RenderRoof(renderer, player)
 
 	// Pass pointer to FOV
 	go RenderSlices(player, *pDynamicFOV, renderChan)
