@@ -93,13 +93,16 @@ go run main.go
 ```struct
 dopher/
 ├── assets
-│   ├── beef.bmp
-│   ├── dogicapixel.ttf
-│   ├── logo.png
-│   ├── npc.bmp
-│   ├── preview.gif
-│   ├── wall2.bmp
-│   └── wall.bmp
+│   ├── font
+│   │   └── dogicapixel.ttf
+│   ├── preview
+│   │   ├── logo.png
+│   │   └── preview.gif
+│   └── textures
+│       ├── beef.bmp
+│       ├── npc.bmp
+│       ├── wall2.bmp
+│       └── wall.bmp
 ├── internal
 │   ├── char
 │   │   ├── npc
@@ -120,6 +123,7 @@ dopher/
 │   │       ├── megamap.go
 │   │       ├── minimap.go
 │   │       ├── npc.go
+│   │       ├── roof.go
 │   │       ├── scene.go
 │   │       └── slices.go
 │   └── model
