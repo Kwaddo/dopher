@@ -1,9 +1,5 @@
 package model
 
-type Map struct {
-	WorldMap [][]int
-}
-
 // 24x24 map is ideal.
 var GlobalMap = &Map{
 	WorldMap: [][]int{

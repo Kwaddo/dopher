@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
+// CheckCollision checks if the player is colliding with a wall.
 func CheckCollision(x, y float64) bool {
-	// Check multiple points around the player
 	WM := DM.GlobalMap.WorldMap
 	for angle := 0.0; angle < 2*math.Pi; angle += math.Pi / 4 {
 		checkX := x + math.Cos(angle)*DM.CollisionBuffer

@@ -11,45 +11,35 @@ import (
 
 type RenderSlice DM.RenderSlice
 
+// RenderSlices renders all the slices of the screen using a go routine.
 func RenderSlices(player *MC.Player, dynamicFOV float64, renderChan chan []*RenderSlice) {
 	slices := make([]*RenderSlice, DM.NumRays)
-
 	rayAngleStep := dynamicFOV / float64(DM.NumRays-1)
 	rayAngle := player.Angle - dynamicFOV/2
 	rayWidth := DM.ScreenWidth / float64(DM.NumRays)
 
-	// Calculate eye level based on crouching state
 	eyeLevel := DM.ScreenHeight / 2
 	if player.Crouching {
-		// Lower the eye level when crouching (subtract instead of add)
 		heightRatio := player.Height / player.DefaultHeight
-		eyeOffset := DM.ScreenHeight * (1 - heightRatio) * 0.1 // Reduced multiplier for more natural crouch
-		eyeLevel -= float64(eyeOffset)                         // Changed from += to -= to make player look down instead of up
+		eyeOffset := DM.ScreenHeight * (1 - heightRatio) * 0.1
+		eyeLevel -= float64(eyeOffset)
 	}
-
 	for i := 0; i < DM.NumRays; i++ {
 		rayResult := Casts.CastRay(player.X, player.Y, rayAngle)
 		distance := rayResult.Distance * math.Cos(rayAngle-player.Angle)
 
-		// Keep using DefaultHeight for consistent wall scaling
 		wallHeight := (DM.ScreenHeight / distance) * (player.DefaultHeight)
-		if wallHeight > DM.ScreenHeight*2 { // Allow for taller walls to extend beyond screen
+		if wallHeight > DM.ScreenHeight*2 {
 			wallHeight = DM.ScreenHeight * 2
 		}
-
 		darkness := Casts.CalculateDarkness(distance)
-
-		// Adjusted wall positioning with proper eyeLevel consideration
 		wallTop := (float64(eyeLevel) - wallHeight/2) + player.BobOffset
-
-		// Texture coord calculation
 		var texCoord int32
 		if rayResult.IsVertical {
 			texCoord = int32(math.Mod(rayResult.HitPointY, 100) * 0.64)
 		} else {
 			texCoord = int32(math.Mod(rayResult.HitPointX, 100) * 0.64)
 		}
-
 		slices[i] = &RenderSlice{
 			DstRect: &sdl.Rect{
 				X: int32(float64(i) * rayWidth),
@@ -63,9 +53,7 @@ func RenderSlices(player *MC.Player, dynamicFOV float64, renderChan chan []*Rend
 			TexCoord: texCoord,
 			Distance: distance,
 		}
-
 		rayAngle += rayAngleStep
 	}
-
 	renderChan <- slices
 }

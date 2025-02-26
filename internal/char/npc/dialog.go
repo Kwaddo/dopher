@@ -8,23 +8,23 @@ import (
 
 type DialogRenderer DM.DialogRenderer
 
+// NewDialogRenderer creates a new DialogRenderer.
 func NewDialogRenderer() (*DialogRenderer, error) {
 	if err := ttf.Init(); err != nil {
 		return nil, err
 	}
-
-	font, err := ttf.OpenFont("assets/dogicapixel.ttf", 24)
+	font, err := ttf.OpenFont("assets/font/dogicapixel.ttf", 24)
 	if err != nil {
 		ttf.Quit()
 		return nil, err
 	}
-
 	return &DialogRenderer{
 		Font:   font,
 		Loaded: true,
 	}, nil
 }
 
+// Close closes the DialogRenderer.
 func (dr *DialogRenderer) Close() {
 	if dr.Loaded {
 		dr.Font.Close()
@@ -33,6 +33,7 @@ func (dr *DialogRenderer) Close() {
 	}
 }
 
+// RenderDialog renders a dialog box with the given text.
 func (dr *DialogRenderer) RenderDialog(renderer *sdl.Renderer, text string) error {
 	surface, err := dr.Font.RenderUTF8Solid(
 		text,
@@ -42,16 +43,13 @@ func (dr *DialogRenderer) RenderDialog(renderer *sdl.Renderer, text string) erro
 		return err
 	}
 	defer surface.Free()
-
 	texture, err := renderer.CreateTextureFromSurface(surface)
 	if err != nil {
 		return err
 	}
 	defer texture.Destroy()
-
 	textW := surface.W
 	textH := surface.H
-
 	return renderer.Copy(texture, nil, &sdl.Rect{
 		X: int32(int32(DM.ScreenWidth/2) - textW/2),
 		Y: int32(int32(DM.ScreenHeight) - textH - 20),

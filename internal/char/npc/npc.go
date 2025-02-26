@@ -9,6 +9,7 @@ type NPCManager DM.NPCManager
 
 var GlobalNPCManager *NPCManager
 
+// NewNPCManager creates a new NPCManager with any according number of NPCs.
 func NewNPCManager() *NPCManager {
 	return &NPCManager{
 		NPCs: []*DM.NPC{
@@ -42,6 +43,7 @@ func NewNPCManager() *NPCManager {
 	}
 }
 
+// AddNPC adds a new NPC to the NPCManager.
 func (nm *NPCManager) AddNPC(x, y float64, texture int) {
 	npc := &DM.NPC{
 		X:       x,
@@ -56,6 +58,7 @@ func (nm *NPCManager) AddNPC(x, y float64, texture int) {
 	nm.NPCs = append(nm.NPCs, npc)
 }
 
+// UpdateDistances updates the distances of all NPCs from the player.
 func (nm *NPCManager) UpdateDistances(playerX, playerY float64) {
 	for _, npc := range nm.NPCs {
 		dx := npc.X - playerX
@@ -64,8 +67,8 @@ func (nm *NPCManager) UpdateDistances(playerX, playerY float64) {
 	}
 }
 
+// SortByDistance sorts the NPCs by distance from the player, furthest first for correct rendering.
 func (nm *NPCManager) SortByDistance() {
-	// Sort NPCs by distance (furthest first for correct rendering)
 	for i := 0; i < len(nm.NPCs)-1; i++ {
 		for j := 0; j < len(nm.NPCs)-i-1; j++ {
 			if nm.NPCs[j].Distance < nm.NPCs[j+1].Distance {
@@ -75,6 +78,7 @@ func (nm *NPCManager) SortByDistance() {
 	}
 }
 
+// UpdateDialogs updates the dialog timers for all NPCs.
 func (nm *NPCManager) UpdateDialogs() {
 	for _, npc := range nm.NPCs {
 		if npc.ShowDialog {

@@ -8,6 +8,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+// RenderRoof renders the skybox/roof of the game.
 func RenderRoof(renderer *sdl.Renderer, player *MC.Player) {
 	for y := 0; y < int(DM.ScreenHeight/2); y++ {
 		distance := DM.ScreenHeight/2 - float64(y)

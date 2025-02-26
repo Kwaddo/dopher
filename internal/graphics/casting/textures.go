@@ -5,19 +5,17 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+// LoadTextures loads the textures for the game from the assets folder.
 func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 	textures := &DM.TextureMap{
 		Textures: make(map[int]*sdl.Texture),
 	}
-
-	// Load different textures
 	textureFiles := map[int]string{
-		1: "assets/wall.bmp",
-		2: "assets/wall2.bmp",
-		3: "assets/npc.bmp",
-		4: "assets/beef.bmp",
+		1: "assets/textures/wall.bmp",
+		2: "assets/textures/wall2.bmp",
+		3: "assets/textures/npc.bmp",
+		4: "assets/textures/beef.bmp",
 	}
-
 	for textureType, file := range textureFiles {
 		surface, err := sdl.LoadBMP(file)
 		if err != nil {
@@ -31,6 +29,5 @@ func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 		}
 		textures.Textures[textureType] = texture
 	}
-
 	return textures, nil
 }

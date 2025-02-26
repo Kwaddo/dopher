@@ -3,19 +3,31 @@ package model
 import "math"
 
 const (
-	FOV              = math.Pi / 3.5
-	NumRays          = 120
-	MaxDepth         = 800.0
-	RotateSpeed      = 0.1
-	CollisionBuffer  = 20.0
+	// FOV is the field of view of the player.
+	FOV = math.Pi / 3.5
+	// NumRays is the number of rays to cast.
+	NumRays = 120
+	// MaxDepth is the maximum depth of the ray.
+	MaxDepth = 800.0
+	// RotateSpeed is the speed of the player rotation.
+	RotateSpeed = 0.1
+	// CollisionBuffer is the buffer for collision detection.
+	CollisionBuffer = 20.0
+	// BaseAcceleration is the base acceleration of the player.
 	BaseAcceleration = 0.5
-	BaseMaxSpeed     = 5.0
-	Friction         = 0.15
+	// BaseMaxSpeed is the base maximum speed of the player.
+	BaseMaxSpeed = 5.0
+	// BaseFriction is the base friction of the player to slow down.
+	Friction = 0.15
+	// SprintMultiplier is the multiplier for sprinting.
 	SprintMultiplier = 1.8
-	MaxDarkness      = 255
+	// MaxDarkness is the maximum constant of a far darkness.
+	MaxDarkness = 255
 )
 
 var (
-	ScreenWidth  float64
+	// The width of the screen.
+	ScreenWidth float64
+	// The height of the screen.
 	ScreenHeight float64
 )
