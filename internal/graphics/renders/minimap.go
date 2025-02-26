@@ -39,7 +39,7 @@ func RenderMinimap(renderer *sdl.Renderer, player *MC.Player, showMap bool) {
 		}
 	}
 	playerMapX := int32(10 + (player.X/100.0)*tileSize)
-	playerMapY := int32(10 + (player.Y/100.0)*tileSize)    
+	playerMapY := int32(10 + (player.Y/100.0)*tileSize)
 	x1 := playerMapX + int32(float64(6)*math.Cos(player.Angle))
 	y1 := playerMapY + int32(float64(6)*math.Sin(player.Angle))
 	x2 := playerMapX + int32(float64(6/2)*math.Cos(player.Angle+2.617))
