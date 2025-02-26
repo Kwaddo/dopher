@@ -17,6 +17,7 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 	Acceleration, MaxSpeed, isMoving := AccelerationAndMaxSpeed(p, state)
 	Input(p, state, Acceleration)
 	Rotation(p, state)
+	Dash(p, state)
 	if state[sdl.SCANCODE_ESCAPE] == 1 || state[sdl.SCANCODE_Q] == 1 {
 		return true
 	}
@@ -89,6 +90,26 @@ func AccelerationAndMaxSpeed(p *Player, state []uint8) (float64, float64, bool) 
 	Acceleration := DM.BaseAcceleration * speedMultiplier
 	MaxSpeed := DM.BaseMaxSpeed * speedMultiplier
 	return Acceleration, MaxSpeed, isMoving
+}
+
+// Dash handles the player's dash mechanic.
+func Dash(p *Player, state []uint8) {
+	if p.DashCooldown > 0 {
+		p.DashCooldown--
+		return
+	}
+	if state[sdl.SCANCODE_SPACE] == 1 && !p.LastDashPressed {
+		speed := math.Hypot(p.VelocityX, p.VelocityY)
+		if speed > 0.1 {
+			dirX := p.VelocityX / speed
+			dirY := p.VelocityY / speed
+			dashForce := 50.0
+			p.VelocityX += dirX * dashForce
+			p.VelocityY += dirY * dashForce
+			p.DashCooldown = 30
+		}
+	}
+	p.LastDashPressed = state[sdl.SCANCODE_SPACE] == 1
 }
 
 // Input handles basic player input for movement.

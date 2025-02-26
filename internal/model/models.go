@@ -24,6 +24,9 @@ type Player struct {
 	// The bob offset and cycle are for the player's bobbing animation.
 	BobOffset float64
 	BobCycle  float64
+	// The dash cooldown and last dash pressed are for the dash mechanic.
+	DashCooldown    int
+	LastDashPressed bool
 }
 
 // The struct of the map itself.
