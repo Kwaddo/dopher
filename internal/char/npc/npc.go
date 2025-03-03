@@ -41,8 +41,8 @@ func NewNPCManager() *NPCManager {
 				DialogTimer: 0,
 			},
 			{
-				X: 	 1050,
-				Y: 	 1050,
+				X:       1050,
+				Y:       1050,
 				Texture: 5,
 				Width:   64,
 				Height:  64,
