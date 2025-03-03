@@ -53,6 +53,23 @@ func NewNPCManager() *NPCManager {
 				ShowDialog:  false,
 				DialogTimer: 0,
 			},
+			{
+				X:       850,
+				Y:       350,
+				Texture: 5,
+				Width:   64,
+				Height:  64,
+				Hitbox: struct{ Radius float64 }{
+					Radius: 0,
+				},
+				DialogText:      "GRRRR!",
+				ShowDialog:      false,
+				DialogTimer:     0,
+				IsEnemy:         true,
+				State:           DM.EnemyStateIdle,
+				DetectionRadius: 400,
+				Speed:           5.0,
+			},
 		},
 	}
 }

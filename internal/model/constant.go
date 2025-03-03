@@ -1,6 +1,9 @@
 package model
 
-import "math"
+import (
+	"github.com/veandco/go-sdl2/ttf"
+	"math"
+)
 
 const (
 	// FOV is the field of view of the player.
@@ -23,6 +26,12 @@ const (
 	SprintMultiplier = 1.8
 	// MaxDarkness is the maximum constant of a far darkness.
 	MaxDarkness = 255
+	// Checkers for if an enemy is idle, chasing, or attacking.
+	EnemyStateIdle    = 0
+	EnemyStateChasing = 1
+	EnemyStateAttack  = 2
+	// The speed of the LERP.
+	LerpSpeed = 0.15
 )
 
 var (
@@ -30,4 +39,15 @@ var (
 	ScreenWidth float64
 	// The height of the screen.
 	ScreenHeight float64
+	// The states of the game.
+	GlobalGameState = GameState{
+		IsPaused: false,
+	}
+	// The global variable of the pause menu.
+	GlobalPauseMenu *PauseMenu
+	// The font manager of the game.
+	GlobalFontManager = &FontManager{
+		Path:  "assets/font/dogicapixel.ttf",
+		Cache: make(map[int]*ttf.Font),
+	}
 )

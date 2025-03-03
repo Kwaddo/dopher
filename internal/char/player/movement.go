@@ -12,6 +12,12 @@ type Player DM.Player
 
 // Movement handles player movement, action, and collision detection.
 func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
+	if DM.GlobalGameState.IsPaused {
+		return false
+	}
+	if state[sdl.SCANCODE_Q] == 1 {
+		return true
+	}
 	oldX := p.X
 	oldY := p.Y
 	Acceleration, MaxSpeed, isMoving := AccelerationAndMaxSpeed(p, state)
@@ -67,7 +73,7 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 		p.BobCycle = 0
 	}
 	UpdatePlayerHeight(p)
-	return state[sdl.SCANCODE_ESCAPE] == 1
+	return false
 }
 
 // AccelerationAndMaxSpeed returns the player's acceleration and max speed based on the player's movement state, as well as handling the speed of the crouching.

@@ -2,8 +2,8 @@ package npc
 
 import (
 	DM "doom/internal/model"
+
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/ttf"
 )
 
 // DialogRenderer is a renderer for dialog boxes.
@@ -11,32 +11,26 @@ type DialogRenderer DM.DialogRenderer
 
 // NewDialogRenderer creates a new DialogRenderer.
 func NewDialogRenderer() (*DialogRenderer, error) {
-	if err := ttf.Init(); err != nil {
-		return nil, err
-	}
-	font, err := ttf.OpenFont("assets/font/dogicapixel.ttf", 24)
-	if err != nil {
-		ttf.Quit()
+	if err := DM.InitFonts(); err != nil {
 		return nil, err
 	}
 	return &DialogRenderer{
-		Font:   font,
 		Loaded: true,
 	}, nil
 }
 
 // Close closes the DialogRenderer.
 func (dr *DialogRenderer) Close() {
-	if dr.Loaded {
-		dr.Font.Close()
-		ttf.Quit()
-		dr.Loaded = false
-	}
+	dr.Loaded = false
 }
 
 // RenderDialog renders a dialog box with the given text.
 func (dr *DialogRenderer) RenderDialog(renderer *sdl.Renderer, text string) error {
-	surface, err := dr.Font.RenderUTF8Solid(
+	font, err := DM.GlobalFontManager.GetFont(24)
+	if err != nil {
+		return err
+	}
+	surface, err := font.RenderUTF8Solid(
 		text,
 		sdl.Color{R: 255, G: 255, B: 255, A: 255},
 	)

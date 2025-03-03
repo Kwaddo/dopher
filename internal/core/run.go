@@ -28,7 +28,6 @@ func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	pCurrentFOV := &currentFOV
 	pTargetFOV := &targetFOV
 	pDynamicFOV := &DynamicFOV
-	const lerpSpeed = 0.15
 	renderChan := make(chan []*Graphics.RenderSlice, 1)
 	npcManager := NPC.NewNPCManager()
 	NPC.GlobalNPCManager = npcManager
@@ -47,39 +46,81 @@ func GameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	showMegaMap := false
 	pShowMiniMap := &showMiniMap
 	pShowMegaMap := &showMegaMap
+	if err := DM.InitFonts(); err != nil {
+		panic(err)
+	}
+	DM.GlobalPauseMenu = &DM.PauseMenu{
+		CurrentOption: 0,
+		Options:       []string{"Resume", "Quit"},
+	}
 	for {
-		HandleEvents(window, renderer, pZBuf, pShowMiniMap, pShowMegaMap)
-		end := player.Movement(sdl.GetKeyboardState(), npcManager)
-		if end {
+		if HandleEvents(window, renderer, pZBuf, pShowMiniMap, pShowMegaMap) {
 			break
 		}
-		if player.Running {
-			*pTargetFOV = DM.FOV * 0.92
+		if !DM.GlobalGameState.IsPaused {
+			end := player.Movement(sdl.GetKeyboardState(), npcManager)
+			if end {
+				break
+			}
+			if player.Running {
+				*pTargetFOV = DM.FOV * 0.92
+			} else {
+				*pTargetFOV = DM.FOV
+			}
+			*pCurrentFOV = MC.LERP(*pCurrentFOV, *pTargetFOV, DM.LerpSpeed)
+			*pDynamicFOV = *pCurrentFOV
+			npcManager.UpdateDistances(player.X, player.Y)
+			npcManager.SortByDistance()
+			for i := range *pZBuf {
+				(*pZBuf)[i] = math.MaxFloat64
+			}
+			npcManager.UpdateDialogs()
+			npcManager.UpdateEnemies(player.X, player.Y)
+		}
+		renderer.SetDrawColor(0, 0, 0, 255)
+		renderer.Clear()
+		if !DM.GlobalGameState.IsPaused {
+			Graphics.RenderScene(renderer, textures, player, pDynamicFOV, renderChan, pZBuf, npcManager, dialogRenderer, pShowMiniMap, pShowMegaMap)
 		} else {
-			*pTargetFOV = DM.FOV
+			Graphics.RenderPauseMenu(renderer)
 		}
-		*pCurrentFOV = MC.LERP(*pCurrentFOV, *pTargetFOV, lerpSpeed)
-		*pDynamicFOV = *pCurrentFOV
-		npcManager.UpdateDistances(player.X, player.Y)
-		npcManager.SortByDistance()
-		for i := range *pZBuf {
-			(*pZBuf)[i] = math.MaxFloat64
-		}
-		npcManager.UpdateDialogs()
-		Graphics.RenderScene(renderer, textures, player, pDynamicFOV, renderChan, pZBuf, npcManager, dialogRenderer, pShowMiniMap, pShowMegaMap)
+
+		renderer.Present()
 		sdl.Delay(16)
 	}
 }
 
 // HandleEvents handles certain events for the game.
-func HandleEvents(window *sdl.Window, renderer *sdl.Renderer, zBuffer *[]float64, showMap *bool, showMegaMap *bool) {
+func HandleEvents(window *sdl.Window, renderer *sdl.Renderer, zBuffer *[]float64, showMap *bool, showMegaMap *bool) bool {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
-			break
+			return true
 		case *sdl.KeyboardEvent:
 			if t.State == sdl.PRESSED {
-				if t.Keysym.Sym == sdl.K_f {
+				if DM.GlobalGameState.IsPaused {
+					switch t.Keysym.Sym {
+					case sdl.K_UP:
+						DM.GlobalPauseMenu.MoveUp()
+					case sdl.K_DOWN:
+						DM.GlobalPauseMenu.MoveDown()
+					case sdl.K_RETURN, sdl.K_SPACE:
+						switch DM.GlobalPauseMenu.GetSelectedOption() {
+						case "Resume":
+							DM.GlobalGameState.IsPaused = false
+							return false
+						case "Quit":
+							return true
+						}
+					case sdl.K_ESCAPE:
+						DM.GlobalGameState.IsPaused = false
+					}
+					continue
+				}
+				switch t.Keysym.Sym {
+				case sdl.K_ESCAPE:
+					DM.GlobalGameState.IsPaused = !DM.GlobalGameState.IsPaused
+				case sdl.K_f:
 					flags := window.GetFlags()
 					if flags&sdl.WINDOW_FULLSCREEN_DESKTOP == sdl.WINDOW_FULLSCREEN_DESKTOP {
 						window.SetFullscreen(0)
@@ -98,17 +139,15 @@ func HandleEvents(window *sdl.Window, renderer *sdl.Renderer, zBuffer *[]float64
 						renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
 						*zBuffer = make([]float64, int(DM.ScreenWidth))
 					}
-				}
-
-				if t.Keysym.Sym == sdl.K_TAB {
+				case sdl.K_TAB:
 					*showMap = !*showMap
 					*showMegaMap = false
-				}
-				if t.Keysym.Sym == sdl.K_m {
+				case sdl.K_m:
 					*showMegaMap = !*showMegaMap
 					*showMap = false
 				}
 			}
 		}
 	}
+	return false
 }

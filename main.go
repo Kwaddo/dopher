@@ -19,6 +19,11 @@ func main() {
 	}
 	defer sdl.Quit()
 
+	if err := DM.InitFonts(); err != nil {
+		panic(err)
+	}
+	defer DM.CleanupFonts()
+
 	// Create a window with the title "Dopher Engine" and the screen size.
 	window, err := sdl.CreateWindow("Dopher Engine", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		int32(DM.ScreenWidth), int32(DM.ScreenHeight), sdl.WINDOW_SHOWN)

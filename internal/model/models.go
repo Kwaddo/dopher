@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
+	"sync"
 )
 
 // The player's values.
@@ -89,6 +90,22 @@ type NPC struct {
 	Hitbox struct {
 		Radius float64
 	}
+	// Enemy behavior, starting with if the NPC is an enemy.
+	IsEnemy bool
+	// State of the enemy, can be idle, chasing, or attacking.
+	State int
+	// The detection radius of the NPC.
+	DetectionRadius float64
+	// How fast the NPC moves.
+	Speed float64
+	// The last move time when the NPC moved.
+	LastMoveTime int
+	// The path blocked time when the NPC is blocked.
+	PathBlockedTime int
+	// The last direction the NPC moved.
+	LastDirection struct {
+		X, Y float64
+	}
 }
 
 // The struct managing all NPCs.
@@ -97,9 +114,35 @@ type NPCManager struct {
 	NPCs []*NPC
 }
 
+// FontManager handles loading and caching fonts at different sizes
+type FontManager struct {
+	// The font path is the path to the font file.
+	Path string
+	// The font cache is the cache of fonts, based off of the size.
+	Cache map[int]*ttf.Font
+	// The mutex is the mutex for the font manager, for no issues.
+	Mutex sync.RWMutex
+	// If the font is initialized or not.
+	IsInitialized bool
+}
+
 // The dialog renderer is the renderer for the dialog box.
 type DialogRenderer struct {
 	// The font and if it's loaded or not.
 	Font   *ttf.Font
 	Loaded bool
+}
+
+// GameState tracks the current state of the game
+type GameState struct {
+	// The game is paused or not.
+	IsPaused bool
+}
+
+// PauseMenu manages the pause menu state
+type PauseMenu struct {
+	// The current option selected.
+	CurrentOption int
+	// The created options for the pause menu.
+	Options []string
 }

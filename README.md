@@ -23,6 +23,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Textured walls with proper perspective and distance shading
 - Sprite-based NPCs with transparency and occlusion
 - Interactive NPCs with typewriter-style dialog system
+- Enemy AI that detects and follows the player
 - Collision detection with walls and NPCs using circular hitboxes
 - Distance-based shading and fog effects
 - Dynamic FOV during sprinting with smooth transitions
@@ -42,16 +43,30 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Real-time player position and direction indicators
 - Multi-level visualization with different wall types
 - Semi-transparent map overlays
+- Pause menu system with game control options
+- Crouching mechanics for enhanced gameplay
+- Dash ability for quick movement bursts
 
 ## Controls
 
 - W/A/S/D: Move around
 - Left/Right Arrow: Rotate view
 - Left Shift (hold): Sprint while moving
+- Left Ctrl (hold): Crouch
+- Space: Dash in movement direction
 - E: Interact with NPCs
-- ESC/Q: Quit game
+- ESC: Toggle pause menu
+- Q: Quit game
 - TAB: Toggle minimap
 - M: Toggle fullscreen map
+- F: Toggle fullscreen mode
+
+## Pause Menu
+
+Press ESC during gameplay to access the pause menu. Use the Up/Down arrow keys to navigate options and Enter to select:
+
+- Resume: Return to gameplay
+- Quit: Exit the game
 
 ## Prerequisites
 
@@ -108,6 +123,7 @@ dopher/
 │   │   ├── npc
 │   │   │   ├── checker.go
 │   │   │   ├── dialog.go
+│   │   │   ├── enemies.go
 │   │   │   └── npc.go
 │   │   └── player
 │   │       ├── checker.go
@@ -123,11 +139,13 @@ dopher/
 │   │       ├── megamap.go
 │   │       ├── minimap.go
 │   │       ├── npc.go
+│   │       ├── pause.go
 │   │       ├── roof.go
 │   │       ├── scene.go
 │   │       └── slices.go
 │   └── model
 │       ├── constant.go
+│       ├── font.go
 │       ├── maps.go
 │       └── models.go
 ├── go.mod
@@ -144,6 +162,7 @@ dopher/
 - Sprite system with transparency and occlusion
 - Physics-based movement system with momentum
 - Dialog system with typewriter effect
+- Enemy AI with detection and pathfinding
 - Dynamic FOV system with smooth transitions
 - Multi-threaded rendering pipeline
 - Distance-based fog and shading system
@@ -155,6 +174,11 @@ dopher/
 - Real-time player position tracking
 - Directional indicators with triangle rendering
 - Multi-layered map rendering with transparency
+- Global font management system
+- Centralized game state management
+- Pause menu with navigation controls
+- Crouching with proper perspective adjustment
+- Dash mechanics with directional acceleration
 
 ### Acknowledgements
 
