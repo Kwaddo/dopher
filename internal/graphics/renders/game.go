@@ -4,6 +4,7 @@ import (
 	NPC "doom/internal/char/npc"
 	MC "doom/internal/char/player"
 	DM "doom/internal/model"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 

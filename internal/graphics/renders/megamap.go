@@ -3,8 +3,9 @@ package renders
 import (
 	MC "doom/internal/char/player"
 	DM "doom/internal/model"
-	"github.com/veandco/go-sdl2/sdl"
 	"math"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 func RenderMegaMap(renderer *sdl.Renderer, player *MC.Player, showMegaMap bool) {

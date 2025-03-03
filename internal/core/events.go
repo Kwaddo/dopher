@@ -1,8 +1,9 @@
 package core
 
 import (
-	DM "doom/internal/model"
 	Graphics "doom/internal/graphics/renders"
+	DM "doom/internal/model"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 

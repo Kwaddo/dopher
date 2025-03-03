@@ -3,14 +3,15 @@ package casting
 import (
 	DM "doom/internal/model"
 	"fmt"
+
 	"github.com/veandco/go-sdl2/ttf"
 )
 
 type FontManager DM.FontManager
 
 var GlobalFontManager = &FontManager{
-	Path:  "assets/font/dogicapixel.ttf",
-	Cache: make(map[int]*ttf.Font),
+	Path:          "assets/font/dogicapixel.ttf",
+	Cache:         make(map[int]*ttf.Font),
 	IsInitialized: false,
 }
 

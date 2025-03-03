@@ -39,13 +39,13 @@ var (
 	// The height of the screen.
 	ScreenHeight = 900.0
 	// FOV variables for current, target, and dynamic.
-	CurrentFOV  = FOV
-    TargetFOV   = FOV
-    DynamicFOV  = FOV
+	CurrentFOV = FOV
+	TargetFOV  = FOV
+	DynamicFOV = FOV
 	// The pointer to the current FOV.
-    ZBuffer     []float64
-    ShowMiniMap = true
-    ShowMegaMap = false
+	ZBuffer     []float64
+	ShowMiniMap = true
+	ShowMegaMap = false
 	// The states of the game.
 	GlobalGameState = GameState{
 		IsPaused: false,
@@ -53,5 +53,5 @@ var (
 	// Global usage of textures
 	GlobalTextures *TextureMap
 	// The channel for rendering slices.
-	RenderChan  chan []*RenderSlice
+	RenderChan chan []*RenderSlice
 )

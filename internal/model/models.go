@@ -1,9 +1,10 @@
 package model
 
 import (
+	"sync"
+
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
-	"sync"
 )
 
 // The player's values.
@@ -150,7 +151,7 @@ type PauseMenu struct {
 // GameContext holds all initialized game resources
 type GameContext struct {
 	// The window of the game.
-    Window   *sdl.Window
+	Window *sdl.Window
 	// The renderer of the game.
-    Renderer *sdl.Renderer
+	Renderer *sdl.Renderer
 }
