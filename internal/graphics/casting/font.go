@@ -1,9 +1,18 @@
-package model
+package casting
 
 import (
+	DM "doom/internal/model"
 	"fmt"
 	"github.com/veandco/go-sdl2/ttf"
 )
+
+type FontManager DM.FontManager
+
+var GlobalFontManager = &FontManager{
+	Path:  "assets/font/dogicapixel.ttf",
+	Cache: make(map[int]*ttf.Font),
+	IsInitialized: false,
+}
 
 // InitFonts initializes the TTF system and prepares the font manager
 func InitFonts() error {
@@ -28,14 +37,11 @@ func (fm *FontManager) GetFont(size int) (*ttf.Font, error) {
 	fm.Mutex.RLock()
 	font, exists := fm.Cache[size]
 	fm.Mutex.RUnlock()
-
 	if exists {
 		return font, nil
 	}
-
 	fm.Mutex.Lock()
 	defer fm.Mutex.Unlock()
-
 	if font, exists := fm.Cache[size]; exists {
 		return font, nil
 	}

@@ -146,3 +146,11 @@ type PauseMenu struct {
 	// The created options for the pause menu.
 	Options []string
 }
+
+// GameContext holds all initialized game resources
+type GameContext struct {
+	// The window of the game.
+    Window   *sdl.Window
+	// The renderer of the game.
+    Renderer *sdl.Renderer
+}

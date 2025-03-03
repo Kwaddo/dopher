@@ -11,8 +11,8 @@ import (
 )
 
 // RenderNPCs renders all the NPCs in the scene.
-func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float64, zBuffer []float64) []*RenderSlice {
-	sprites := make([]*RenderSlice, 0, len(npcManager.NPCs))
+func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float64, zBuffer []float64) []*DM.RenderSlice {
+	sprites := make([]*DM.RenderSlice, 0, len(npcManager.NPCs))
 	npcManager.UpdateDistances(player.X, player.Y)
 	var eyeOffset float64 = 0
 	if player.Crouching {
@@ -50,7 +50,7 @@ func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float6
 			continue
 		}
 		darkness := Casts.CalculateDarkness(distance)
-		sprites = append(sprites, &RenderSlice{
+		sprites = append(sprites, &DM.RenderSlice{
 			DstRect: &sdl.Rect{
 				X: startX,
 				Y: int32(spriteTop),

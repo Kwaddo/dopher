@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/veandco/go-sdl2/ttf"
 	"math"
 )
 
@@ -36,18 +35,23 @@ const (
 
 var (
 	// The width of the screen.
-	ScreenWidth float64
+	ScreenWidth = 1500.0
 	// The height of the screen.
-	ScreenHeight float64
+	ScreenHeight = 900.0
+	// FOV variables for current, target, and dynamic.
+	CurrentFOV  = FOV
+    TargetFOV   = FOV
+    DynamicFOV  = FOV
+	// The pointer to the current FOV.
+    ZBuffer     []float64
+    ShowMiniMap = true
+    ShowMegaMap = false
 	// The states of the game.
 	GlobalGameState = GameState{
 		IsPaused: false,
 	}
-	// The global variable of the pause menu.
-	GlobalPauseMenu *PauseMenu
-	// The font manager of the game.
-	GlobalFontManager = &FontManager{
-		Path:  "assets/font/dogicapixel.ttf",
-		Cache: make(map[int]*ttf.Font),
-	}
+	// Global usage of textures
+	GlobalTextures *TextureMap
+	// The channel for rendering slices.
+	RenderChan  chan []*RenderSlice
 )

@@ -14,7 +14,7 @@ func RenderScene(
 	textures *DM.TextureMap,
 	player *MC.Player,
 	pDynamicFOV *float64,
-	renderChan chan []*RenderSlice,
+	renderChan chan []*DM.RenderSlice,
 	pZBuffer *[]float64,
 	npcManager *NPC.NPCManager,
 	dialogRenderer *NPC.DialogRenderer,
@@ -24,10 +24,14 @@ func RenderScene(
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
 	renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
+
 	RenderFloor(renderer, player)
 	RenderRoof(renderer, player)
+
 	go RenderSlices(player, *pDynamicFOV, renderChan)
 	wallSlices := <-renderChan
+
+	// Render wall slices
 	for _, slice := range wallSlices {
 		if texture, ok := textures.Textures[slice.WallType]; ok {
 			texture.SetColorMod(255-slice.Darkness, 255-slice.Darkness, 255-slice.Darkness)
@@ -46,12 +50,16 @@ func RenderScene(
 			}
 		}
 	}
-	npcRenderChan := make(chan []*RenderSlice, 1)
+
+	// Render NPCs
+	npcRenderChan := make(chan []*DM.RenderSlice, 1)
 	go func() {
 		npcSlices := RenderNPCs(player, npcManager, *pDynamicFOV, *pZBuffer)
 		npcRenderChan <- npcSlices
 	}()
 	npcSlices := <-npcRenderChan
+
+	// Render NPC sprites
 	for _, sprite := range npcSlices {
 		if texture, ok := textures.Textures[sprite.WallType]; ok {
 			texture.SetColorMod(255-sprite.Darkness, 255-sprite.Darkness, 255-sprite.Darkness)
@@ -80,6 +88,8 @@ func RenderScene(
 			}
 		}
 	}
+
+	// Render dialogs
 	for _, npc := range npcManager.NPCs {
 		if npc.ShowDialog {
 			err := dialogRenderer.RenderDialog(renderer, npc.DialogText)
@@ -88,6 +98,8 @@ func RenderScene(
 			}
 		}
 	}
+
+	// Render maps
 	if *pShowMegaMap {
 		RenderMegaMap(renderer, player, *pShowMegaMap)
 	} else {

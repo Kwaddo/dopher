@@ -9,11 +9,9 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type RenderSlice DM.RenderSlice
-
 // RenderSlices renders all the slices of the screen using a go routine.
-func RenderSlices(player *MC.Player, dynamicFOV float64, renderChan chan []*RenderSlice) {
-	slices := make([]*RenderSlice, DM.NumRays)
+func RenderSlices(player *MC.Player, dynamicFOV float64, renderChan chan []*DM.RenderSlice) {
+	slices := make([]*DM.RenderSlice, DM.NumRays)
 	rayAngleStep := dynamicFOV / float64(DM.NumRays-1)
 	rayAngle := player.Angle - dynamicFOV/2
 	rayWidth := DM.ScreenWidth / float64(DM.NumRays)
@@ -40,7 +38,7 @@ func RenderSlices(player *MC.Player, dynamicFOV float64, renderChan chan []*Rend
 		} else {
 			texCoord = int32(math.Mod(rayResult.HitPointX, 100) * 0.64)
 		}
-		slices[i] = &RenderSlice{
+		slices[i] = &DM.RenderSlice{
 			DstRect: &sdl.Rect{
 				X: int32(float64(i) * rayWidth),
 				Y: int32(wallTop),

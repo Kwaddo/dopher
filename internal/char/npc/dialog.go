@@ -1,8 +1,8 @@
 package npc
 
 import (
+	Casts "doom/internal/graphics/casting"
 	DM "doom/internal/model"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -11,7 +11,7 @@ type DialogRenderer DM.DialogRenderer
 
 // NewDialogRenderer creates a new DialogRenderer.
 func NewDialogRenderer() (*DialogRenderer, error) {
-	if err := DM.InitFonts(); err != nil {
+	if err := Casts.InitFonts(); err != nil {
 		return nil, err
 	}
 	return &DialogRenderer{
@@ -26,7 +26,7 @@ func (dr *DialogRenderer) Close() {
 
 // RenderDialog renders a dialog box with the given text.
 func (dr *DialogRenderer) RenderDialog(renderer *sdl.Renderer, text string) error {
-	font, err := DM.GlobalFontManager.GetFont(24)
+	font, err := Casts.GlobalFontManager.GetFont(24)
 	if err != nil {
 		return err
 	}

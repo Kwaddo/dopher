@@ -1,13 +1,15 @@
 package renders
 
 import (
+	Casts "doom/internal/graphics/casting"
 	DM "doom/internal/model"
-
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
 
 type PauseMenu DM.PauseMenu
+
+var GlobalPauseMenu *PauseMenu
 
 // NewPauseMenu creates a new pause menu, as per global struct requirement.
 func NewPauseMenu() *PauseMenu {
@@ -37,8 +39,8 @@ func (pm *PauseMenu) GetSelectedOption() string {
 
 // RenderPauseMenu renders the pause menu overlay that you see and love!
 func RenderPauseMenu(renderer *sdl.Renderer) {
-	if DM.GlobalPauseMenu == nil {
-		DM.GlobalPauseMenu = &DM.PauseMenu{
+	if GlobalPauseMenu == nil {
+		GlobalPauseMenu = &PauseMenu{
 			CurrentOption: 0,
 			Options:       []string{"Resume", "Quit"},
 		}
@@ -50,25 +52,25 @@ func RenderPauseMenu(renderer *sdl.Renderer) {
 		W: int32(DM.ScreenWidth),
 		H: int32(DM.ScreenHeight),
 	})
-	titleFont, err := DM.GlobalFontManager.GetFont(36)
+	titleFont, err := Casts.GlobalFontManager.GetFont(36)
 	if err == nil {
 		RenderText(renderer, titleFont, "PAUSED", int32(DM.ScreenWidth)/2, int32(DM.ScreenHeight)/3, true)
 	}
-	optionFont, err := DM.GlobalFontManager.GetFont(24)
+	optionFont, err := Casts.GlobalFontManager.GetFont(24)
 	if err != nil {
 		return
 	}
 	baseY := int32(DM.ScreenHeight) / 2
-	for i, option := range DM.GlobalPauseMenu.Options {
+	for i, option := range GlobalPauseMenu.Options {
 		color := sdl.Color{R: 200, G: 200, B: 200, A: 255}
-		if i == DM.GlobalPauseMenu.CurrentOption {
+		if i == GlobalPauseMenu.CurrentOption {
 			color = sdl.Color{R: 255, G: 255, B: 0, A: 255}
 		}
 
 		RenderColoredText(renderer, optionFont, option, int32(DM.ScreenWidth)/2,
 			baseY+int32(i*50), true, color)
 	}
-	hintFont, err := DM.GlobalFontManager.GetFont(16)
+	hintFont, err := Casts.GlobalFontManager.GetFont(16)
 	if err == nil {
 		RenderText(renderer, hintFont, "Up/Down: Select   Enter: Confirm",
 			int32(DM.ScreenWidth)/2, int32(DM.ScreenHeight)*4/5, true)
