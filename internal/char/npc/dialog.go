@@ -6,6 +6,7 @@ import (
 	"github.com/veandco/go-sdl2/ttf"
 )
 
+// DialogRenderer is a renderer for dialog boxes.
 type DialogRenderer DM.DialogRenderer
 
 // NewDialogRenderer creates a new DialogRenderer.

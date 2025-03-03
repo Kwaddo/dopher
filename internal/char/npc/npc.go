@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// NPCManager manages all NPCs in the game.
 type NPCManager DM.NPCManager
 
 var GlobalNPCManager *NPCManager
@@ -22,7 +23,7 @@ func NewNPCManager() *NPCManager {
 				Hitbox: struct{ Radius float64 }{
 					Radius: 24,
 				},
-				DialogText:  "Hello traveler!",
+				DialogText:  "Hello traveler! How are you?",
 				ShowDialog:  false,
 				DialogTimer: 0,
 			},
@@ -33,9 +34,22 @@ func NewNPCManager() *NPCManager {
 				Width:   64,
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{
-					Radius: 24,
+					Radius: 12,
 				},
 				DialogText:  "Beef.",
+				ShowDialog:  false,
+				DialogTimer: 0,
+			},
+			{
+				X: 	 1050,
+				Y: 	 1050,
+				Texture: 5,
+				Width:   64,
+				Height:  64,
+				Hitbox: struct{ Radius float64 }{
+					Radius: 12,
+				},
+				DialogText:  "Hello gang.",
 				ShowDialog:  false,
 				DialogTimer: 0,
 			},
