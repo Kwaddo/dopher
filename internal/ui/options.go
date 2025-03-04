@@ -148,7 +148,7 @@ func RenderOptionsMenu(renderer *sdl.Renderer) {
 		} else {
 			setting := GlobalOptionsMenu.Settings[option]
 			displayValue := setting.DisplayFunc(setting.Value)
-			RenderColoredText(renderer, optionFont, option, int32(DM.ScreenWidth)/2-200,
+			RenderColoredText(renderer, optionFont, option, int32(DM.ScreenWidth)/2-300,
 				baseY+int32(i*50), false, color)
 			valueText := fmt.Sprintf("< %s >", displayValue)
 			RenderColoredText(renderer, optionFont, valueText, int32(DM.ScreenWidth)/2+200,
