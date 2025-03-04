@@ -1,8 +1,8 @@
 package renders
 
 import (
-	NPC "doom/internal/char/npc"
-	MC "doom/internal/char/player"
+	NPC "doom/internal/character/npc"
+	MC "doom/internal/character/player"
 	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -20,28 +20,45 @@ func RenderScene(
 	dialogRenderer *NPC.DialogRenderer,
 	pShowMap *bool,
 	pShowMegaMap *bool,
+	npcRenderChan chan []*DM.RenderSlice,
 ) {
+	renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
-	renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
-
 	RenderFloor(renderer, player)
 	RenderRoof(renderer, player)
-
-	go RenderSlices(player, *pDynamicFOV, renderChan)
+	renderDone := make(chan struct{})
+	npcRenderDone := make(chan struct{})
+	go func() {
+		RenderSlices(player, *pDynamicFOV, renderChan)
+		renderDone <- struct{}{}
+	}()
 	wallSlices := <-renderChan
-
-	// Render wall slices
+	<-renderDone
+	batches := make(map[int]map[uint8]*DM.RenderBatch)
 	for _, slice := range wallSlices {
 		if texture, ok := textures.Textures[slice.WallType]; ok {
-			texture.SetColorMod(255-slice.Darkness, 255-slice.Darkness, 255-slice.Darkness)
+			if _, exists := batches[slice.WallType]; !exists {
+				batches[slice.WallType] = make(map[uint8]*DM.RenderBatch)
+			}
+			if _, exists := batches[slice.WallType][slice.Darkness]; !exists {
+				batches[slice.WallType][slice.Darkness] = &DM.RenderBatch{
+					Texture:  texture,
+					Darkness: slice.Darkness,
+					Slices:   make([]*sdl.Rect, 0, 10),
+					SrcRects: make([]*sdl.Rect, 0, 10),
+				}
+			}
+			batch := batches[slice.WallType][slice.Darkness]
+			batch.Slices = append(batch.Slices, slice.DstRect)
+
 			srcRect := &sdl.Rect{
 				X: slice.TexCoord,
 				Y: 0,
 				W: 1,
 				H: 64,
 			}
-			renderer.Copy(texture, srcRect, slice.DstRect)
+			batch.SrcRects = append(batch.SrcRects, srcRect)
 			screenX := int(slice.DstRect.X)
 			for x := screenX; x < screenX+int(slice.DstRect.W) && x < int(DM.ScreenWidth); x++ {
 				if x >= 0 && x < len(*pZBuffer) {
@@ -50,16 +67,29 @@ func RenderScene(
 			}
 		}
 	}
+	var colorModCache = make(map[uint8][3]uint8)
+	for _, textureBatches := range batches {
+		for _, batch := range textureBatches {
+			colorMod, exists := colorModCache[batch.Darkness]
+			if !exists {
+				value := 255 - batch.Darkness
+				colorMod = [3]uint8{value, value, value}
+				colorModCache[batch.Darkness] = colorMod
+			}
 
-	// Render NPCs
-	npcRenderChan := make(chan []*DM.RenderSlice, 1)
+			batch.Texture.SetColorMod(colorMod[0], colorMod[1], colorMod[2])
+			for i, dstRect := range batch.Slices {
+				renderer.Copy(batch.Texture, batch.SrcRects[i], dstRect)
+			}
+		}
+	}
 	go func() {
 		npcSlices := RenderNPCs(player, npcManager, *pDynamicFOV, *pZBuffer)
 		npcRenderChan <- npcSlices
+		npcRenderDone <- struct{}{}
 	}()
 	npcSlices := <-npcRenderChan
-
-	// Render NPC sprites
+	<-npcRenderDone
 	for _, sprite := range npcSlices {
 		if texture, ok := textures.Textures[sprite.WallType]; ok {
 			texture.SetColorMod(255-sprite.Darkness, 255-sprite.Darkness, 255-sprite.Darkness)
@@ -88,8 +118,6 @@ func RenderScene(
 			}
 		}
 	}
-
-	// Render dialogs
 	for _, npc := range npcManager.NPCs {
 		if npc.ShowDialog {
 			err := dialogRenderer.RenderDialog(renderer, npc.DialogText)
@@ -98,8 +126,6 @@ func RenderScene(
 			}
 		}
 	}
-
-	// Render maps
 	if *pShowMegaMap {
 		RenderMegaMap(renderer, player, *pShowMegaMap)
 	} else {

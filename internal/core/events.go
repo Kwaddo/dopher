@@ -1,8 +1,8 @@
 package core
 
 import (
-	Graphics "doom/internal/graphics/renders"
 	DM "doom/internal/model"
+	Menu "doom/internal/ui"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -15,16 +15,60 @@ func HandleEvents(window *sdl.Window, renderer *sdl.Renderer) bool {
 			return true
 		case *sdl.KeyboardEvent:
 			if t.State == sdl.PRESSED {
+				if DM.GlobalGameState.InMainMenu {
+					switch t.Keysym.Sym {
+					case sdl.K_UP:
+						Menu.GlobalMainMenu.MoveUp()
+					case sdl.K_DOWN:
+						Menu.GlobalMainMenu.MoveDown()
+					case sdl.K_RETURN, sdl.K_SPACE:
+						switch Menu.GlobalMainMenu.GetSelectedOption() {
+						case "Start Game":
+							DM.GlobalGameState.InMainMenu = false
+						case "Options":
+							DM.GlobalGameState.InOptionsMenu = true
+							DM.GlobalGameState.InMainMenu = false
+						case "Quit":
+							return true
+						}
+					}
+					continue
+				}
+				if DM.GlobalGameState.InOptionsMenu {
+					switch t.Keysym.Sym {
+					case sdl.K_UP:
+						Menu.GlobalOptionsMenu.MoveUp()
+					case sdl.K_DOWN:
+						Menu.GlobalOptionsMenu.MoveDown()
+					case sdl.K_LEFT:
+						Menu.GlobalOptionsMenu.DecreaseSetting()
+					case sdl.K_RIGHT:
+						Menu.GlobalOptionsMenu.IncreaseSetting()
+					case sdl.K_RETURN, sdl.K_SPACE:
+						if Menu.GlobalOptionsMenu.GetSelectedOption() == "Back" {
+							DM.GlobalGameState.InOptionsMenu = false
+							DM.GlobalGameState.InMainMenu = true
+						}
+					case sdl.K_ESCAPE:
+						DM.GlobalGameState.InOptionsMenu = false
+						DM.GlobalGameState.InMainMenu = true
+					}
+					continue
+				}
 				if DM.GlobalGameState.IsPaused {
 					switch t.Keysym.Sym {
 					case sdl.K_UP:
-						Graphics.GlobalPauseMenu.MoveUp()
+						Menu.GlobalPauseMenu.MoveUp()
 					case sdl.K_DOWN:
-						Graphics.GlobalPauseMenu.MoveDown()
+						Menu.GlobalPauseMenu.MoveDown()
 					case sdl.K_RETURN, sdl.K_SPACE:
-						switch Graphics.GlobalPauseMenu.GetSelectedOption() {
+						switch Menu.GlobalPauseMenu.GetSelectedOption() {
 						case "Resume":
 							DM.GlobalGameState.IsPaused = false
+							return false
+						case "Return to Menu":
+							DM.GlobalGameState.IsPaused = false
+							DM.GlobalGameState.InMainMenu = true
 							return false
 						case "Quit":
 							return true
@@ -43,19 +87,18 @@ func HandleEvents(window *sdl.Window, renderer *sdl.Renderer) bool {
 						window.SetFullscreen(0)
 						DM.ScreenWidth = 1500
 						DM.ScreenHeight = 900
-						renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
-						DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
 					} else {
 						window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
-						screenSurface, err := window.GetSurface()
+						w, h, err := renderer.GetOutputSize()
 						if err != nil {
 							panic(err)
 						}
-						DM.ScreenWidth = float64(screenSurface.W)
-						DM.ScreenHeight = float64(screenSurface.H)
-						renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
-						DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
+						DM.ScreenWidth = float64(w)
+						DM.ScreenHeight = float64(h)
 					}
+					renderer.SetViewport(&sdl.Rect{X: 0, Y: 0, W: int32(DM.ScreenWidth), H: int32(DM.ScreenHeight)})
+					DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
+					DM.NeedToRecreateBuffers = true
 				case sdl.K_TAB:
 					DM.ShowMiniMap = !DM.ShowMiniMap
 					DM.ShowMegaMap = false

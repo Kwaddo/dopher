@@ -1,10 +1,10 @@
 # Dopher - A Doom-style Engine in Go
 
 <p align="center">
-  <img src="./assets/preview/logo.png" alt="Dopher Logo"/>
+  <img src="./assets/logo.png" alt="Dopher Logo"/>
 </p>
 <p align="center">
-  <img src="./assets/preview/preview.gif" />
+  <img src="./assets/preview.gif" />
 </p>
 
 A sophisticated raycasting engine inspired by the original Doom, implemented in Go using SDL2.
@@ -24,7 +24,9 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Realistic floor rendering with gradient darkness based on distance
 - Sprite-based NPCs with transparency and occlusion
 - Interactive NPCs with typewriter-style dialog system
-- Enemy AI with detection radius, chase behavior and pathfinding
+- Performance-optimized enemy AI with frame distribution
+- Texture caching for dialog text rendering
+- Enemy pathfinding with obstacle avoidance
 - Collision detection with walls and NPCs using circular hitboxes
 - Distance-based shading and fog effects
 - Dynamic FOV during sprinting with smooth LERP transitions
@@ -49,6 +51,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Font management system with TTF support
 - Centralized event handling system
 - Game state management with pause/resume functionality
+- CI/CD with GitHub Actions workflow
 
 ## Controls
 
@@ -118,11 +121,12 @@ dopher/
 │   │   └── preview.gif
 │   └── textures
 │       ├── beef.bmp
+│       ├── dictator.bmp
 │       ├── npc.bmp
 │       ├── wall2.bmp
 │       └── wall.bmp
 ├── internal
-│   ├── char
+│   ├── character
 │   │   ├── npc
 │   │   │   ├── checker.go
 │   │   │   ├── dialog.go
@@ -134,7 +138,7 @@ dopher/
 │   ├── core
 │   │   ├── events.go
 │   │   ├── initializer.go
-│   │   └── run.go
+│   │   └── loop.go
 │   ├── graphics
 │   │   ├── casting
 │   │   │   ├── cast.go
@@ -146,14 +150,17 @@ dopher/
 │   │       ├── megamap.go
 │   │       ├── minimap.go
 │   │       ├── npc.go
-│   │       ├── pause.go
 │   │       ├── roof.go
 │   │       ├── scene.go
 │   │       └── slices.go
-│   └── model
-│       ├── constant.go
-│       ├── maps.go
-│       └── models.go
+│   ├── model
+│   │   ├── constant.go
+│   │   ├── maps.go
+│   │   └── models.go
+│   └── ui
+│       ├── menu.go
+│       ├── options.go
+│       └── pause.go
 ├── go.mod
 ├── go.sum
 ├── main.go
@@ -167,8 +174,9 @@ dopher/
 - Texture mapping with perspective correction
 - Sprite system with transparency and occlusion
 - Physics-based movement system with momentum
-- Dialog system with typewriter effect
-- Enemy AI with detection radius, chase behavior and obstacle avoidance
+- Dialog system with texture caching and LRU eviction
+- Frame-distributed enemy AI for performance optimization
+- Enemy pathfinding with wall detection and obstacle avoidance
 - Dynamic FOV system with smooth LERP transitions
 - Multi-threaded rendering pipeline
 - Distance-based floor rendering with gradient shading
@@ -187,6 +195,7 @@ dopher/
 - Dash mechanics with cooldown and directional acceleration
 - TTF font rendering and text display system
 - Structured game initialization and resource cleanup
+- Continuous integration with GitHub Actions
 
 ### Acknowledgements
 

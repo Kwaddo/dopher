@@ -1,7 +1,7 @@
 package player
 
 import (
-	NPC "doom/internal/char/npc"
+	NPC "doom/internal/character/npc"
 	DM "doom/internal/model"
 	"math"
 
@@ -60,7 +60,7 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 			p.VelocityY = 0
 		}
 	}
-	if p.Walking {
+	if p.Walking && DM.HeadBobbingEnabled {
 		bobSpeed := 0.1
 		if p.Running {
 			bobSpeed = 0.15
@@ -70,6 +70,9 @@ func (p *Player) Movement(state []uint8, npcManager *NPC.NPCManager) bool {
 		p.BobOffset = math.Sin(p.BobCycle) * bobAmplitude
 	} else {
 		p.BobOffset *= 0.8
+		if !DM.HeadBobbingEnabled {
+			p.BobOffset = 0
+		}
 		p.BobCycle = 0
 	}
 	UpdatePlayerHeight(p)

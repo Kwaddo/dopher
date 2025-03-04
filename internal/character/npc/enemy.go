@@ -7,8 +7,11 @@ import (
 
 // UpdateEnemies updates all enemy NPCs in the game.
 func (nm *NPCManager) UpdateEnemies(playerX, playerY float64) {
-	for _, npc := range nm.NPCs {
+	for i, npc := range nm.NPCs {
 		if !npc.IsEnemy {
+			continue
+		}
+		if DM.GlobalFrameCount%3 != i%3 {
 			continue
 		}
 		dx := playerX - npc.X

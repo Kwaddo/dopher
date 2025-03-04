@@ -1,8 +1,8 @@
 package renders
 
 import (
-	NPC "doom/internal/char/npc"
-	MC "doom/internal/char/player"
+	NPC "doom/internal/character/npc"
+	MC "doom/internal/character/player"
 	Casts "doom/internal/graphics/casting"
 	DM "doom/internal/model"
 	"math"

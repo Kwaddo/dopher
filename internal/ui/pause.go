@@ -1,4 +1,4 @@
-package renders
+package ui
 
 import (
 	Casts "doom/internal/graphics/casting"
@@ -16,7 +16,7 @@ var GlobalPauseMenu *PauseMenu
 func NewPauseMenu() *PauseMenu {
 	return &PauseMenu{
 		CurrentOption: 0,
-		Options:       []string{"Resume", "Quit"},
+		Options:       []string{"Resume", "Return to Menu", "Quit"},
 	}
 }
 
@@ -43,7 +43,7 @@ func RenderPauseMenu(renderer *sdl.Renderer) {
 	if GlobalPauseMenu == nil {
 		GlobalPauseMenu = &PauseMenu{
 			CurrentOption: 0,
-			Options:       []string{"Resume", "Quit"},
+			Options:       []string{"Resume", "Return to Menu", "Quit"},
 		}
 	}
 	renderer.SetDrawColor(0, 0, 0, 200)

@@ -53,6 +53,18 @@ type RenderSlice struct {
 	Distance float64
 }
 
+// To render in batches.
+type RenderBatch struct {
+	// The texture that's to be rendered.
+	Texture *sdl.Texture
+	// The darkness that's to be rendered.
+	Darkness uint8
+	// The according slices.
+	Slices []*sdl.Rect
+	// The rectangle slices.
+	SrcRects []*sdl.Rect
+}
+
 // RayHit is the hit of the ray on the wall.
 type RayHit struct {
 	// The distance is the distance from the player to the wall.
@@ -138,6 +150,9 @@ type DialogRenderer struct {
 type GameState struct {
 	// The game is paused or not.
 	IsPaused bool
+	// The game is in the main menu or not.
+	InMainMenu    bool
+	InOptionsMenu bool
 }
 
 // PauseMenu manages the pause menu state
@@ -146,6 +161,27 @@ type PauseMenu struct {
 	CurrentOption int
 	// The created options for the pause menu.
 	Options []string
+}
+
+type MainMenu struct {
+	CurrentOption int
+	Options       []string
+}
+
+// OptionsMenu manages the options menu state and settings
+type OptionsMenu struct {
+	CurrentOption int
+	Options       []string
+	Settings      map[string]*Setting
+}
+
+// Setting represents a configurable game setting
+type Setting struct {
+	Value       float64
+	Min         float64
+	Max         float64
+	Step        float64
+	DisplayFunc func(float64) string
 }
 
 // GameContext holds all initialized game resources

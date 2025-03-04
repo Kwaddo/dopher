@@ -1,7 +1,7 @@
 package renders
 
 import (
-	MC "doom/internal/char/player"
+	MC "doom/internal/character/player"
 	DM "doom/internal/model"
 	"math"
 

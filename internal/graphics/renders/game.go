@@ -1,8 +1,8 @@
 package renders
 
 import (
-	NPC "doom/internal/char/npc"
-	MC "doom/internal/char/player"
+	NPC "doom/internal/character/npc"
+	MC "doom/internal/character/player"
 	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -12,7 +12,7 @@ import (
 var DialogRenderer *NPC.DialogRenderer
 
 // RenderGame handles the rendering of the game scene.
-func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCManager) {
+func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCManager, npcRenderChan chan []*DM.RenderSlice) {
 	RenderScene(
 		renderer,
 		DM.GlobalTextures,
@@ -24,5 +24,6 @@ func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCMa
 		DialogRenderer,
 		&DM.ShowMiniMap,
 		&DM.ShowMegaMap,
+		npcRenderChan,
 	)
 }

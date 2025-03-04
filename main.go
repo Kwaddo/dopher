@@ -1,8 +1,9 @@
 package main
 
 import (
-	MC "doom/internal/char/player"
+	MC "doom/internal/character/player"
 	Game "doom/internal/core"
+	DM "doom/internal/model"
 )
 
 func main() {
@@ -21,6 +22,11 @@ func main() {
 		LastDashPressed: false,
 	}
 
+	DM.GlobalGameState = DM.GameState{
+		InMainMenu: true,
+		IsPaused:   false,
+	}
+
 	// The gameloop!
-	Game.GameLoop(gameCtx.Renderer, player)
+	Game.RunGameLoop(gameCtx.Renderer, player)
 }

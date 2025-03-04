@@ -5,20 +5,14 @@ import (
 )
 
 const (
-	// FOV is the field of view of the player.
-	FOV = math.Pi / 3.5
 	// NumRays is the number of rays to cast.
 	NumRays = 120
 	// MaxDepth is the maximum depth of the ray.
 	MaxDepth = 800.0
-	// RotateSpeed is the speed of the player rotation.
-	RotateSpeed = 0.1
 	// CollisionBuffer is the buffer for collision detection.
 	CollisionBuffer = 20.0
 	// BaseAcceleration is the base acceleration of the player.
 	BaseAcceleration = 0.5
-	// BaseMaxSpeed is the base maximum speed of the player.
-	BaseMaxSpeed = 5.0
 	// BaseFriction is the base friction of the player to slow down.
 	Friction = 0.15
 	// SprintMultiplier is the multiplier for sprinting.
@@ -38,6 +32,8 @@ var (
 	ScreenWidth = 1500.0
 	// The height of the screen.
 	ScreenHeight = 900.0
+	// The global frame count.
+	GlobalFrameCount = 0
 	// FOV variables for current, target, and dynamic.
 	CurrentFOV = FOV
 	TargetFOV  = FOV
@@ -54,4 +50,14 @@ var (
 	GlobalTextures *TextureMap
 	// The channel for rendering slices.
 	RenderChan chan []*RenderSlice
+	// If the head bobbing is enabled or not.
+	HeadBobbingEnabled = true
+	// FOV is the field of view of the player.
+	FOV = math.Pi / 3.5
+	// RotateSpeed is the speed of the player rotation.
+	RotateSpeed = 0.1
+	// BaseMaxSpeed is the base maximum speed of the player.
+	BaseMaxSpeed = 5.0
+	// Checks if buffers need to be recreated.
+	NeedToRecreateBuffers = false
 )

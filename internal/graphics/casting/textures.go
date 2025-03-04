@@ -24,11 +24,11 @@ func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 			return nil, err
 		}
 		defer surface.Free()
-
 		texture, err := renderer.CreateTextureFromSurface(surface)
 		if err != nil {
 			return nil, err
 		}
+		texture.SetBlendMode(sdl.BLENDMODE_BLEND)
 		textures.Textures[textureType] = texture
 	}
 	return textures, nil
