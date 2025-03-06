@@ -70,6 +70,7 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	targetFPS := 60
 	frameDelay := uint32(1000 / targetFPS)
 	var bufferMutex sync.Mutex
+	player.InitializeGun()
 
 	for {
 		frameStart := sdl.GetTicks()
@@ -87,7 +88,7 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 		} else if DM.GlobalGameState.IsPaused {
 			Menu.RenderPauseMenu(renderer)
 		} else {
-			end := player.Movement(sdl.GetKeyboardState(), npcManager)
+			end := player.Actions(sdl.GetKeyboardState(), npcManager)
 			if end {
 				break
 			}

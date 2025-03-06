@@ -13,7 +13,7 @@ A sophisticated raycasting engine inspired by the original Doom, implemented in 
 
 Dopher is an advanced 3D rendering engine that utilizes raycasting techniques similar to those used in classic games like Wolfenstein 3D and Doom. It creates an immersive pseudo-3D visualization from a 2D map, featuring textured walls, sprite-based NPCs, dynamic lighting effects, and realistic floor rendering with distance-based shading.
 
-The engine employs Digital Differential Analysis (DDA) for precise wall detection and implements a z-buffer system for proper depth sorting of walls and sprites. This allows for realistic occlusion of NPCs behind walls and accurate perspective rendering. The engine features smooth player movement with momentum-based physics, dynamic field of view adjustments during sprinting, and interactive NPCs with a typewriter-style dialog system.
+The engine employs Digital Differential Analysis (DDA) for precise wall detection and implements a z-buffer system for proper depth sorting of walls and sprites. This allows for realistic occlusion of NPCs behind walls and accurate perspective rendering. The engine features smooth player movement with momentum-based physics, dynamic field of view adjustments during sprinting, interactive NPCs with a typewriter-style dialog system, and a weapon system with enemies that can be damaged and eliminated.
 
 At its core, Dopher combines efficient raycasting algorithms with modern rendering techniques to create a seamless retro-inspired gaming experience. The physics system provides realistic movement with momentum, crouching capabilities, and collision detection, while the sprite system handles transparent NPCs that can be occluded by walls. The dynamic FOV system smoothly transitions during player movement, enhancing the sense of speed and immersion.
 
@@ -24,6 +24,9 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Realistic floor rendering with gradient darkness based on distance
 - Sprite-based NPCs with transparency and occlusion
 - Interactive NPCs with typewriter-style dialog system
+- Weapon system with muzzle flash effects and recoil animation
+- Enemy health system with damage and death mechanics
+- Ammo management with limited resources
 - Performance-optimized enemy AI with frame distribution
 - Texture caching for dialog text rendering
 - Enemy pathfinding with obstacle avoidance
@@ -60,6 +63,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Left Shift (hold): Sprint while moving
 - Left Ctrl (hold): Crouch to move slower and reduce height
 - Space: Dash in movement direction (with cooldown)
+- UP Arrow: Fire weapon at enemies
 - E: Interact with NPCs
 - ESC: Toggle pause menu
 - Q: Quit game
@@ -72,6 +76,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 Press ESC during gameplay to access the pause menu. Use the Up/Down arrow keys to navigate options and Enter to select:
 
 - Resume: Return to gameplay
+- Return to Menu: Go back to main menu
 - Quit: Exit the game
 
 ## Prerequisites
@@ -122,6 +127,8 @@ dopher/
 │   └── textures
 │       ├── beef.bmp
 │       ├── dictator.bmp
+│       ├── gun.bmp
+│       ├── muzzleflash.bmp
 │       ├── npc.bmp
 │       ├── wall2.bmp
 │       └── wall.bmp
@@ -134,7 +141,10 @@ dopher/
 │   │   │   └── npc.go
 │   │   └── player
 │   │       ├── checker.go
-│   │       └── movement.go
+│   │       ├── gun.go
+│   │       ├── inputs.go
+│   │       ├── mobility.go
+│   │       └── player.go
 │   ├── core
 │   │   ├── events.go
 │   │   ├── initializer.go

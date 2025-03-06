@@ -8,7 +8,7 @@ import (
 // UpdateEnemies updates all enemy NPCs in the game.
 func (nm *NPCManager) UpdateEnemies(playerX, playerY float64) {
 	for i, npc := range nm.NPCs {
-		if !npc.IsEnemy {
+		if !npc.IsEnemy || !npc.IsAlive {
 			continue
 		}
 		if DM.GlobalFrameCount%3 != i%3 {
@@ -49,14 +49,10 @@ func (nm *NPCManager) UpdateEnemies(playerX, playerY float64) {
 						npc.Y = newRightY
 					}
 				}
-
-				// Reset move timer - determines movement speed
 				npc.LastMoveTime = 2
 			} else {
 				npc.LastMoveTime--
 			}
-
-			// Check if close enough to attack
 			if distSquared <= (npc.Hitbox.Radius+30)*(npc.Hitbox.Radius+30) {
 				npc.State = DM.EnemyStateAttack
 				if npc.DialogTimer <= 0 {
@@ -66,8 +62,31 @@ func (nm *NPCManager) UpdateEnemies(playerX, playerY float64) {
 				}
 			}
 		} else {
-			// Player not detected - return to idle
 			npc.State = DM.EnemyStateIdle
 		}
 	}
+}
+
+// DamageEnemy applies damage to an NPC and handles death logic
+func (nm *NPCManager) DamageEnemy(npcIndex int, damage int) bool {
+	if npcIndex < 0 || npcIndex >= len(nm.NPCs) {
+		return false
+	}
+	npc := nm.NPCs[npcIndex]
+	if !npc.IsEnemy || !npc.IsAlive {
+		return false
+	}
+	npc.Health -= damage
+	npc.ShowDialog = true
+	npc.DialogText = "Ouch!"
+	npc.DialogTimer = 60
+	if npc.Health <= 0 {
+		npc.Health = 0
+		npc.IsAlive = false
+		npc.DialogText = "Argh!"
+		npc.DialogTimer = 120
+		npc.State = DM.EnemyStateIdle
+		return true
+	}
+	return false
 }

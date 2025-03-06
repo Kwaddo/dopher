@@ -2,6 +2,7 @@ package model
 
 import (
 	"sync"
+	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
@@ -29,6 +30,28 @@ type Player struct {
 	// The dash cooldown and last dash pressed are for the dash mechanic.
 	DashCooldown    int
 	LastDashPressed bool
+	// The state of the gun held by the player.
+	Gun *GunState
+}
+
+// The state of the gun held by the player.
+type GunState struct {
+	// The current weapon is the weapon the player is holding.
+	CurrentWeapon int
+	// The last fired time is the last time the player fired the weapon.
+	LastFired time.Time
+	// IsFiring is if the player is firing the weapon.
+	IsFiring bool
+	// MuzzleFlash is if the muzzle flash is shown.
+	MuzzleFlash bool
+	// How long the flash is being shown for.
+	FlashTimer int
+	// The damage of the weapon and the fire rate.
+	Damage   int
+	FireRate time.Duration
+	// The amount ammo and max ammo of the weapon.
+	Ammo    int
+	MaxAmmo int
 }
 
 // The struct of the map itself.
@@ -119,6 +142,9 @@ type NPC struct {
 	LastDirection struct {
 		X, Y float64
 	}
+	Health    int
+	MaxHealth int
+	IsAlive   bool
 }
 
 // The struct managing all NPCs.

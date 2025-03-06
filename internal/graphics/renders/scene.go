@@ -131,5 +131,6 @@ func RenderScene(
 	} else {
 		RenderMinimap(renderer, player, *pShowMap)
 	}
+	MC.RenderGun(renderer, player, textures)
 	renderer.Present()
 }

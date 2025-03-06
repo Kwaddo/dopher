@@ -5,8 +5,6 @@ import (
 )
 
 const (
-	// NumRays is the number of rays to cast.
-	NumRays = 120
 	// MaxDepth is the maximum depth of the ray.
 	MaxDepth = 800.0
 	// CollisionBuffer is the buffer for collision detection.
@@ -32,6 +30,8 @@ var (
 	ScreenWidth = 1500.0
 	// The height of the screen.
 	ScreenHeight = 900.0
+	// Number of rays to cast, think of it as the graphics.
+	NumRays = 150
 	// The global frame count.
 	GlobalFrameCount = 0
 	// FOV variables for current, target, and dynamic.

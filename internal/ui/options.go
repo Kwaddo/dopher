@@ -87,7 +87,6 @@ func (om *OptionsMenu) IncreaseSetting() {
 	if option == "Back" {
 		return
 	}
-
 	setting := om.Settings[option]
 	setting.Value = math.Min(setting.Value+setting.Step, setting.Max)
 	om.ApplySettings()

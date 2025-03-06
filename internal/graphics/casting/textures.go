@@ -17,6 +17,8 @@ func LoadTextures(renderer *sdl.Renderer) (*DM.TextureMap, error) {
 		3: "assets/textures/npc.bmp",
 		4: "assets/textures/beef.bmp",
 		5: "assets/textures/dictator.bmp",
+		6: "assets/textures/gun.bmp",
+		7: "assets/textures/muzzleflash.bmp",
 	}
 	for textureType, file := range textureFiles {
 		surface, err := sdl.LoadBMP(file)

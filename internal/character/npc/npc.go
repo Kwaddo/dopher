@@ -68,7 +68,10 @@ func NewNPCManager() *NPCManager {
 				IsEnemy:         true,
 				State:           DM.EnemyStateIdle,
 				DetectionRadius: 400,
-				Speed:           5.0,
+				Speed:           20.0,
+				Health:          100,
+				MaxHealth:       100,
+				IsAlive:         true,
 			},
 		},
 	}
