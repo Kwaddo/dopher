@@ -9,7 +9,7 @@ import (
 )
 
 // Global dialog renderer
-var DialogRenderer *NPC.DialogRenderer
+var DialogRenderer *NPC.DialogueRenderer
 
 // RenderGame handles the rendering of the game scene.
 func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCManager, npcRenderChan chan []*DM.RenderSlice) {

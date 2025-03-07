@@ -13,48 +13,41 @@ A sophisticated raycasting engine inspired by the original Doom, implemented in 
 
 Dopher is an advanced 3D rendering engine that utilizes raycasting techniques similar to those used in classic games like Wolfenstein 3D and Doom. It creates an immersive pseudo-3D visualization from a 2D map, featuring textured walls, sprite-based NPCs, dynamic lighting effects, and realistic floor rendering with distance-based shading.
 
-The engine employs Digital Differential Analysis (DDA) for precise wall detection and implements a z-buffer system for proper depth sorting of walls and sprites. This allows for realistic occlusion of NPCs behind walls and accurate perspective rendering. The engine features smooth player movement with momentum-based physics, dynamic field of view adjustments during sprinting, interactive NPCs with a typewriter-style dialog system, and a weapon system with enemies that can be damaged and eliminated.
+The engine employs Digital Differential Analysis (DDA) for precise wall detection and implements a z-buffer system for proper depth sorting of walls and sprites. This allows for realistic occlusion of NPCs behind walls and accurate perspective rendering. The engine features smooth player movement with momentum-based physics, dynamic field of view adjustments during sprinting, and interactive NPCs with a dialogue tree system.
 
 At its core, Dopher combines efficient raycasting algorithms with modern rendering techniques to create a seamless retro-inspired gaming experience. The physics system provides realistic movement with momentum, crouching capabilities, and collision detection, while the sprite system handles transparent NPCs that can be occluded by walls. The dynamic FOV system smoothly transitions during player movement, enhancing the sense of speed and immersion.
 
 ## Features
 
 - First-person perspective rendering with raycasting
+- Complete UI system with main menu, options, and pause menus
 - Textured walls with proper perspective and distance shading
 - Realistic floor rendering with gradient darkness based on distance
-- Sprite-based NPCs with transparency and occlusion
-- Interactive NPCs with typewriter-style dialog system
-- Weapon system with muzzle flash effects and recoil animation
-- Enemy health system with damage and death mechanics
-- Ammo management with limited resources
-- Performance-optimized enemy AI with frame distribution
-- Texture caching for dialog text rendering
-- Enemy pathfinding with obstacle avoidance
+- Weapon system with muzzle flash effects
+- Interactive dialogue trees with multiple response options
+- Frame-distributed enemy AI with health and combat system
+- Performance optimizations with double-buffered rendering
+- Adaptive screen resolution and fullscreen handling
+- Configurable game settings through options menu
+- Texture caching for dialogue text rendering with LRU eviction
+- Enemy pathfinding with obstacle avoidance and AI states
 - Collision detection with walls and NPCs using circular hitboxes
 - Distance-based shading and fog effects
 - Dynamic FOV during sprinting with smooth LERP transitions
 - Physics-based movement system with momentum and friction
 - Crouching mechanics that adjust player height and speed
 - Dash ability with cooldown for quick movement bursts
-- Advanced texture mapping with proper coordinate calculation
-- Configurable display settings and game parameters
-- Simple 2D map system with extensible layout
+- Frame rate control system for consistent gameplay
 - Z-buffer implementation for proper depth sorting
 - Head bobbing effect during movement
 - Multiple wall textures support
 - Fullscreen toggle support (F key)
-- Optimized rendering with goroutines
+- Multi-threaded rendering with goroutines
 - Transparent sprite rendering with proper depth testing
 - Minimap toggle (TAB key)
 - Fullscreen megamap toggle (M key)
 - Real-time player position and direction indicators
-- Multi-level visualization with different wall types
-- Semi-transparent map overlays
-- Pause menu system with game control options
-- Font management system with TTF support
-- Centralized event handling system
-- Game state management with pause/resume functionality
-- CI/CD with GitHub Actions workflow
+- Continuous integration with GitHub Actions
 
 ## Controls
 
@@ -62,19 +55,31 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Left/Right Arrow: Rotate view
 - Left Shift (hold): Sprint while moving
 - Left Ctrl (hold): Crouch to move slower and reduce height
+- Mouse: Aim weapon
+- Left Mouse Button: Fire weapon
 - Space: Dash in movement direction (with cooldown)
-- UP Arrow: Fire weapon at enemies
-- E: Interact with NPCs
-- ESC: Toggle pause menu
-- Q: Quit game
+- E: Interact with NPCs and dialogue options
+- 1-9: Select dialogue options
+- ESC: Toggle pause menu / Exit dialogue
 - TAB: Toggle minimap
 - M: Toggle fullscreen map
 - F: Toggle fullscreen mode
 
-## Pause Menu
+## Game Menus
 
-Press ESC during gameplay to access the pause menu. Use the Up/Down arrow keys to navigate options and Enter to select:
+### Main Menu
+- Start Game: Begin a new game
+- Options: Configure game settings
+- Quit: Exit the game
 
+### Options Menu
+- FOV: Adjust field of view (60°-110°)
+- Mouse Sensitivity: Adjust rotation speed
+- Movement Speed: Change player movement speed
+- Head Bobbing: Toggle head bobbing effect
+- Back: Return to main menu
+
+### Pause Menu
 - Resume: Return to gameplay
 - Return to Menu: Go back to main menu
 - Quit: Exit the game
@@ -83,7 +88,7 @@ Press ESC during gameplay to access the pause menu. Use the Up/Down arrow keys t
 
 - Go 1.24 or later
 - SDL2 development libraries
-- SDL2 TTF development libraries (for dialog system)
+- SDL2 TTF development libraries (for text rendering)
 
 ### Installing Dependencies
 
@@ -136,7 +141,8 @@ dopher/
 │   ├── character
 │   │   ├── npc
 │   │   │   ├── checker.go
-│   │   │   ├── dialog.go
+│   │   │   ├── dialoguefuncs.go
+│   │   │   ├── dialogue.go
 │   │   │   ├── enemy.go
 │   │   │   └── npc.go
 │   │   └── player
@@ -181,18 +187,21 @@ dopher/
 
 - Raycasting engine with DDA algorithm
 - Z-buffer implementation for proper depth sorting
+- Double-buffered rendering for smooth frame rates
 - Texture mapping with perspective correction
 - Sprite system with transparency and occlusion
+- Interactive dialogue tree system with multiple branches
 - Physics-based movement system with momentum
-- Dialog system with texture caching and LRU eviction
+- Dialogue system with texture caching and LRU eviction
 - Frame-distributed enemy AI for performance optimization
-- Enemy pathfinding with wall detection and obstacle avoidance
+- Enemy health system with damage and death states
+- Weapon system with fire rate and muzzle flash effects
 - Dynamic FOV system with smooth LERP transitions
 - Multi-threaded rendering pipeline
 - Distance-based floor rendering with gradient shading
 - Collision detection using ray-circle intersection
 - Head bobbing animation system synchronized with movement
-- Advanced floor rendering with gradient darkness based on distance
+- Configurable game settings through in-game menu
 - Smooth state transitions using LERP for height and FOV changes
 - Dynamic map system with multiple visualization modes
 - Real-time player position tracking
@@ -200,7 +209,7 @@ dopher/
 - Multi-layered map rendering with transparency
 - Global font management system with size-based caching
 - Centralized game state management
-- Pause menu with navigation controls
+- Complete menu system with main, options, and pause states
 - Crouching with height adjustment and speed reduction
 - Dash mechanics with cooldown and directional acceleration
 - TTF font rendering and text display system

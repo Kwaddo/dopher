@@ -30,7 +30,7 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
 	npcManager := NPC.NewNPCManager()
 	NPC.GlobalNPCManager = npcManager
-	Graphics.DialogRenderer, err = NPC.NewDialogRenderer()
+	Graphics.DialogRenderer, err = NPC.NewDialogueRenderer()
 	if err != nil {
 		panic(err)
 	}

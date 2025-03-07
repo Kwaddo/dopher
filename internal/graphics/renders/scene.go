@@ -17,7 +17,7 @@ func RenderScene(
 	renderChan chan []*DM.RenderSlice,
 	pZBuffer *[]float64,
 	npcManager *NPC.NPCManager,
-	dialogRenderer *NPC.DialogRenderer,
+	dialogRenderer *NPC.DialogueRenderer,
 	pShowMap *bool,
 	pShowMegaMap *bool,
 	npcRenderChan chan []*DM.RenderSlice,
@@ -118,19 +118,27 @@ func RenderScene(
 			}
 		}
 	}
-	for _, npc := range npcManager.NPCs {
-		if npc.ShowDialog {
-			err := dialogRenderer.RenderDialog(renderer, npc.DialogText)
-			if err != nil {
-				continue
-			}
-		}
-	}
 	if *pShowMegaMap {
 		RenderMegaMap(renderer, player, *pShowMegaMap)
 	} else {
 		RenderMinimap(renderer, player, *pShowMap)
 	}
 	MC.RenderGun(renderer, player, textures)
+	for _, npc := range npcManager.NPCs {
+		if npc.ShowDialog {
+			if npc.DialogueTree != nil && npc.DialogueTree.IsActive {
+				err := dialogRenderer.RenderDialogueWithOptions(renderer, npc)
+				if err != nil {
+					continue
+				}
+			} else {
+				err := dialogRenderer.RenderDialogue(renderer, npc.DialogText)
+				if err != nil {
+					continue
+				}
+			}
+		}
+	}
+
 	renderer.Present()
 }

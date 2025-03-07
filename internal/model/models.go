@@ -122,6 +122,8 @@ type NPC struct {
 	DialogText  string
 	ShowDialog  bool
 	DialogTimer int
+	// New dialogue tree field
+	DialogueTree *DialogueTree
 	// The hitbox radius of the NPC.
 	Hitbox struct {
 		Radius float64
@@ -147,6 +149,33 @@ type NPC struct {
 	IsAlive   bool
 }
 
+// DialogueNode represents a single node in a dialogue tree
+type DialogueNode struct {
+	ID      string           // Unique identifier for this node
+	Text    string           // Text displayed when this node is active
+	Options []DialogueOption // Available options for the player to select
+	OnEnter func(*NPC)       // Optional callback when this node is displayed
+}
+
+// DialogueOption represents a player response option
+type DialogueOption struct {
+	Text      string          // Text of this option
+	NextNode  string          // ID of the next dialogue node
+	Condition func(*NPC) bool // Optional condition to show this option (can be nil)
+}
+
+// DialogueTree contains all dialogue nodes for an NPC
+type DialogueTree struct {
+	Nodes         map[string]*DialogueNode // All dialogue nodes indexed by ID
+	CurrentNodeID string                   // Currently active dialogue node
+	IsActive      bool                     // Whether dialogue is currently active
+
+	// Dialogue display control
+	ReadyToAdvance bool  // Whether the grace period has passed and player can advance
+	GraceStartTime int64 // When the current dialogue started (in frame count)
+	GracePeriod    int64 // How many frames to wait before allowing advance
+}
+
 // The struct managing all NPCs.
 type NPCManager struct {
 	// The array of NPCs so that we can manage multiple in a game.
@@ -166,10 +195,21 @@ type FontManager struct {
 }
 
 // The dialog renderer is the renderer for the dialog box.
-type DialogRenderer struct {
-	// The font and if it's loaded or not.
-	Font   *ttf.Font
+type DialogueRenderer struct {
+	// If loaded or not.
 	Loaded bool
+	// The text texture chache.
+	TextCache map[string]*TextureCacheEntry
+}
+
+// The cache for the text box.
+type TextureCacheEntry struct {
+	// The texture itself.
+	Texture *sdl.Texture
+	// The width and height of it.
+	Width, Height int32
+	// When it was last used.
+	LastUsed int64
 }
 
 // GameState tracks the current state of the game

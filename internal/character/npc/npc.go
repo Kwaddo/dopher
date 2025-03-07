@@ -23,9 +23,10 @@ func NewNPCManager() *NPCManager {
 				Hitbox: struct{ Radius float64 }{
 					Radius: 24,
 				},
-				DialogText:  "Hello traveler! How are you?",
-				ShowDialog:  false,
-				DialogTimer: 0,
+				DialogText:   "Hello traveler! How are you?",
+				ShowDialog:   false,
+				DialogTimer:  0,
+				DialogueTree: CreateBasicDialogueTree(),
 			},
 			{
 				X:       550,
@@ -39,6 +40,26 @@ func NewNPCManager() *NPCManager {
 				DialogText:  "Beef.",
 				ShowDialog:  false,
 				DialogTimer: 0,
+				DialogueTree: &DM.DialogueTree{
+					Nodes: map[string]*DM.DialogueNode{
+						"start": {
+							ID:   "start",
+							Text: "Beef. Moo.",
+							Options: []DM.DialogueOption{
+								{Text: "Moo?", NextNode: "moo"},
+								{Text: "Goodbye", NextNode: ""},
+							},
+						},
+						"moo": {
+							ID:   "moo",
+							Text: "MOOOOOO!",
+							Options: []DM.DialogueOption{
+								{Text: "I agree", NextNode: ""},
+							},
+						},
+					},
+					CurrentNodeID: "start",
+				},
 			},
 			{
 				X:       1050,

@@ -27,9 +27,16 @@ func (p *Player) Actions(state []uint8, npcManager *NPC.NPCManager) bool {
 	if state[sdl.SCANCODE_ESCAPE] == 1 || state[sdl.SCANCODE_Q] == 1 {
 		return true
 	}
+
+	// Check for both direct interaction via E and
+	// continuous dialogue option selection
 	if state[sdl.SCANCODE_E] == 1 {
-		npcManager.CheckInteraction(p.X, p.Y, p.Angle)
+		npcManager.CheckInteraction(p.X, p.Y, p.Angle, state)
+	} else {
+		// Always check for dialogue option inputs when an NPC dialogue is active
+		npcManager.CheckDialogueInput(state)
 	}
+
 	p.Walking = isMoving
 	if !isMoving {
 		p.Running = false
