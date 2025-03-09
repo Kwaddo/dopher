@@ -31,8 +31,12 @@ func AccelerationAndMaxSpeed(p *Player, state []uint8) (float64, float64, bool) 
 
 // Dash handles the player's dash mechanic.
 func Dash(p *Player, state []uint8) {
+	p.IsDashing = p.DashCooldown > 0
 	if p.DashCooldown > 0 {
 		p.DashCooldown--
+		if p.DashCooldown == 0 {
+			p.IsDashing = false
+		}
 		return
 	}
 	if state[sdl.SCANCODE_SPACE] == 1 && !p.LastDashPressed {
@@ -44,6 +48,7 @@ func Dash(p *Player, state []uint8) {
 			p.VelocityX += dirX * dashForce
 			p.VelocityY += dirY * dashForce
 			p.DashCooldown = 30
+			p.IsDashing = true
 		}
 	}
 	p.LastDashPressed = state[sdl.SCANCODE_SPACE] == 1

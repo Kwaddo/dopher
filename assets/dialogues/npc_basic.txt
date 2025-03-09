@@ -1,0 +1,18 @@
+[start]
+Text: Hello there! I'm an NPC in this world.
+NextID: info1
+
+[info1]
+Text: You're in a dangerous place. Be careful as you explore.
+NextID: info2
+
+[info2]
+Text: The enemies here are fierce. Shoot them before they get to you!
+NextID: info3
+
+[info3]
+Text: I was created for this game. That's all there is to know!
+NextID: end
+
+[end]
+Text: Good luck on your adventure!

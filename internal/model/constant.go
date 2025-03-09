@@ -60,4 +60,8 @@ var (
 	BaseMaxSpeed = 5.0
 	// Checks if buffers need to be recreated.
 	NeedToRecreateBuffers = false
+	// The last state of the key pressed.
+	LastKeyState byte = 0
+	// Shows if interacting an NPC.
+	InteractingNPC int = -1
 )

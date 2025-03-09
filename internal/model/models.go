@@ -27,9 +27,10 @@ type Player struct {
 	// The bob offset and cycle are for the player's bobbing animation.
 	BobOffset float64
 	BobCycle  float64
-	// The dash cooldown and last dash pressed are for the dash mechanic.
+	// The dash cooldown, last dash pressed, and if the player is dashing are for the dash mechanic.
 	DashCooldown    int
 	LastDashPressed bool
+	IsDashing       bool
 	// The state of the gun held by the player.
 	Gun *GunState
 }
@@ -151,29 +152,40 @@ type NPC struct {
 
 // DialogueNode represents a single node in a dialogue tree
 type DialogueNode struct {
-	ID      string           // Unique identifier for this node
-	Text    string           // Text displayed when this node is active
-	Options []DialogueOption // Available options for the player to select
-	OnEnter func(*NPC)       // Optional callback when this node is displayed
-}
-
-// DialogueOption represents a player response option
-type DialogueOption struct {
-	Text      string          // Text of this option
-	NextNode  string          // ID of the next dialogue node
-	Condition func(*NPC) bool // Optional condition to show this option (can be nil)
+	// The ID of the node.
+	ID string
+	// The according dialogue text of the node.
+	Text string
+	// The ID of the next node, hence making it one.
+	NextID string
+	// To connect the nodes directly.
+	OnEnter func(*NPC)
 }
 
 // DialogueTree contains all dialogue nodes for an NPC
 type DialogueTree struct {
-	Nodes         map[string]*DialogueNode // All dialogue nodes indexed by ID
-	CurrentNodeID string                   // Currently active dialogue node
-	IsActive      bool                     // Whether dialogue is currently active
-
-	// Dialogue display control
-	ReadyToAdvance bool  // Whether the grace period has passed and player can advance
-	GraceStartTime int64 // When the current dialogue started (in frame count)
-	GracePeriod    int64 // How many frames to wait before allowing advance
+	// The nodes mapped.
+	Nodes map[string]*DialogueNode
+	// The ID of the current node.
+	CurrentNodeID string
+	// If the dialogue tree is active or not.
+	IsActive bool
+	// If ready to advance to the next node or not.
+	ReadyToAdvance bool
+	// The grace for the start period of the text box.
+	GraceStartTime int64
+	// The altogether grace period for the dialogue tree.
+	GracePeriod int64
+	// How many characters to show at a time.
+	CharsToShow int
+	// The speed of the text animation.
+	TextSpeed int
+	// The time of when the last character appears.
+	LastCharTime int64
+	// IF the text was fully shown or not.
+	TextFullyShown bool
+	// If the according action is held down or not.
+	KeyWasDown bool
 }
 
 // The struct managing all NPCs.
@@ -212,7 +224,7 @@ type TextureCacheEntry struct {
 	LastUsed int64
 }
 
-// GameState tracks the current state of the game
+// GameState tracks the current state of the game.
 type GameState struct {
 	// The game is paused or not.
 	IsPaused bool
@@ -221,7 +233,7 @@ type GameState struct {
 	InOptionsMenu bool
 }
 
-// PauseMenu manages the pause menu state
+// PauseMenu manages the pause menu state.
 type PauseMenu struct {
 	// The current option selected.
 	CurrentOption int
@@ -234,14 +246,14 @@ type MainMenu struct {
 	Options       []string
 }
 
-// OptionsMenu manages the options menu state and settings
+// OptionsMenu manages the options menu state and settings.
 type OptionsMenu struct {
 	CurrentOption int
 	Options       []string
 	Settings      map[string]*Setting
 }
 
-// Setting represents a configurable game setting
+// Setting represents a configurable game setting.
 type Setting struct {
 	Value       float64
 	Min         float64
@@ -250,7 +262,7 @@ type Setting struct {
 	DisplayFunc func(float64) string
 }
 
-// GameContext holds all initialized game resources
+// GameContext holds all initialized game resources.
 type GameContext struct {
 	// The window of the game.
 	Window *sdl.Window

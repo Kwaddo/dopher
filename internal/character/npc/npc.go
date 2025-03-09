@@ -40,26 +40,6 @@ func NewNPCManager() *NPCManager {
 				DialogText:  "Beef.",
 				ShowDialog:  false,
 				DialogTimer: 0,
-				DialogueTree: &DM.DialogueTree{
-					Nodes: map[string]*DM.DialogueNode{
-						"start": {
-							ID:   "start",
-							Text: "Beef. Moo.",
-							Options: []DM.DialogueOption{
-								{Text: "Moo?", NextNode: "moo"},
-								{Text: "Goodbye", NextNode: ""},
-							},
-						},
-						"moo": {
-							ID:   "moo",
-							Text: "MOOOOOO!",
-							Options: []DM.DialogueOption{
-								{Text: "I agree", NextNode: ""},
-							},
-						},
-					},
-					CurrentNodeID: "start",
-				},
 			},
 			{
 				X:       1050,

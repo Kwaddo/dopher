@@ -28,13 +28,13 @@ func (p *Player) Actions(state []uint8, npcManager *NPC.NPCManager) bool {
 		return true
 	}
 
-	// Check for both direct interaction via E and
-	// continuous dialogue option selection
+	// First check if a dialogue is active, and if so, handle dialogue input
+	// regardless of whether E is pressed
+	npcManager.CheckDialogueInput(state)
+
+	// Then check for new interactions only if no dialogue is currently active
 	if state[sdl.SCANCODE_E] == 1 {
 		npcManager.CheckInteraction(p.X, p.Y, p.Angle, state)
-	} else {
-		// Always check for dialogue option inputs when an NPC dialogue is active
-		npcManager.CheckDialogueInput(state)
 	}
 
 	p.Walking = isMoving

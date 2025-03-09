@@ -1,6 +1,7 @@
 package renders
 
 import (
+	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
 	DM "doom/internal/model"
@@ -17,7 +18,7 @@ func RenderScene(
 	renderChan chan []*DM.RenderSlice,
 	pZBuffer *[]float64,
 	npcManager *NPC.NPCManager,
-	dialogRenderer *NPC.DialogueRenderer,
+	dialogRenderer *Dialogue.DialogueRenderer,
 	pShowMap *bool,
 	pShowMegaMap *bool,
 	npcRenderChan chan []*DM.RenderSlice,
@@ -126,19 +127,18 @@ func RenderScene(
 	MC.RenderGun(renderer, player, textures)
 	for _, npc := range npcManager.NPCs {
 		if npc.ShowDialog {
-			if npc.DialogueTree != nil && npc.DialogueTree.IsActive {
+			if npc.DialogueTree != nil {
 				err := dialogRenderer.RenderDialogueWithOptions(renderer, npc)
 				if err != nil {
 					continue
 				}
 			} else {
-				err := dialogRenderer.RenderDialogue(renderer, npc.DialogText)
+				err := dialogRenderer.RenderSimpleDialogue(renderer, npc.DialogText)
 				if err != nil {
 					continue
 				}
 			}
 		}
 	}
-
 	renderer.Present()
 }

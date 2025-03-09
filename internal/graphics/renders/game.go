@@ -1,6 +1,7 @@
 package renders
 
 import (
+	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
 	DM "doom/internal/model"
@@ -9,7 +10,7 @@ import (
 )
 
 // Global dialog renderer
-var DialogRenderer *NPC.DialogueRenderer
+var DialogRenderer *Dialogue.DialogueRenderer
 
 // RenderGame handles the rendering of the game scene.
 func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCManager, npcRenderChan chan []*DM.RenderSlice) {

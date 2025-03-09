@@ -1,6 +1,7 @@
 package core
 
 import (
+	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
 	Casts "doom/internal/graphics/casting"
@@ -30,7 +31,7 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
 	npcManager := NPC.NewNPCManager()
 	NPC.GlobalNPCManager = npcManager
-	Graphics.DialogRenderer, err = NPC.NewDialogueRenderer()
+	Graphics.DialogRenderer, err = Dialogue.NewDialogueRenderer()
 	if err != nil {
 		panic(err)
 	}
@@ -92,7 +93,9 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 			if end {
 				break
 			}
-			if player.Running {
+			if player.IsDashing {
+				DM.TargetFOV = DM.FOV * 0.9
+			} else if player.Running {
 				DM.TargetFOV = DM.FOV * 0.92
 			} else {
 				DM.TargetFOV = DM.FOV
@@ -110,6 +113,7 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 			}
 			npcManager.UpdateDialogs()
 			npcManager.UpdateEnemies(player.X, player.Y)
+			npcManager.UpdateTextAnimations()
 			Graphics.RenderGame(renderer, player, npcManager, npcRenderChan)
 		}
 		renderer.SetRenderTarget(nil)
