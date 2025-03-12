@@ -57,8 +57,8 @@ type GunState struct {
 
 // The struct of the map itself.
 type Map struct {
-	// The map is a 2D array, with the numbers representing the walls.
-	WorldMap [][]int
+	// The maps is a 3D array, within are 2D arrays that has the numbers representing the walls.
+	Maps [][][]int
 }
 
 // The render slice is the slice of the screen that will be rendered.
@@ -145,9 +145,14 @@ type NPC struct {
 	LastDirection struct {
 		X, Y float64
 	}
-	Health    int
+	// The remaining health of the NPC.
+	Health int
+	// The max health of the NPC.
 	MaxHealth int
-	IsAlive   bool
+	// If the NPC is alive or not.
+	IsAlive bool
+	// The map that the NPC is currently in.
+	MapIndex int
 }
 
 // DialogueNode represents a single node in a dialogue tree

@@ -27,6 +27,7 @@ func NewNPCManager() *NPCManager {
 				ShowDialog:   false,
 				DialogTimer:  0,
 				DialogueTree: CreateBasicDialogueTree(),
+				MapIndex:     0,
 			},
 			{
 				X:       550,
@@ -40,6 +41,7 @@ func NewNPCManager() *NPCManager {
 				DialogText:  "Beef.",
 				ShowDialog:  false,
 				DialogTimer: 0,
+				MapIndex:    0,
 			},
 			{
 				X:       1050,
@@ -53,6 +55,7 @@ func NewNPCManager() *NPCManager {
 				DialogText:  "Hello gang.",
 				ShowDialog:  false,
 				DialogTimer: 0,
+				MapIndex:    0,
 			},
 			{
 				X:       850,
@@ -61,7 +64,7 @@ func NewNPCManager() *NPCManager {
 				Width:   64,
 				Height:  64,
 				Hitbox: struct{ Radius float64 }{
-					Radius: 0,
+					Radius: 24,
 				},
 				DialogText:      "GRRRR!",
 				ShowDialog:      false,
@@ -73,6 +76,7 @@ func NewNPCManager() *NPCManager {
 				Health:          100,
 				MaxHealth:       100,
 				IsAlive:         true,
+				MapIndex:        0,
 			},
 		},
 	}

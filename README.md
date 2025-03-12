@@ -48,6 +48,10 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Fullscreen megamap toggle (M key)
 - Real-time player position and direction indicators
 - Continuous integration with GitHub Actions
+- Map-specific NPCs with teleportation mechanics
+- Battle system that transports player and enemies to a dedicated arena map
+- Context-sensitive weapons that only appear in combat areas
+- Enhanced dialogue system with proper closure on final dialogue nodes
 
 ## Controls
 
@@ -69,11 +73,13 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 ## Game Menus
 
 ### Main Menu
+
 - Start Game: Begin a new game
 - Options: Configure game settings
 - Quit: Exit the game
 
 ### Options Menu
+
 - FOV: Adjust field of view (60°-110°)
 - Mouse Sensitivity: Adjust rotation speed
 - Movement Speed: Change player movement speed
@@ -81,6 +87,7 @@ At its core, Dopher combines efficient raycasting algorithms with modern renderi
 - Back: Return to main menu
 
 ### Pause Menu
+
 - Resume: Return to gameplay
 - Return to Menu: Go back to main menu
 - Quit: Exit the game
@@ -151,6 +158,7 @@ dopher/
 │   │   │   ├── enemy.go
 │   │   │   └── npc.go
 │   │   └── player
+│   │       ├── battle.go
 │   │       ├── checker.go
 │   │       ├── gun.go
 │   │       ├── inputs.go
@@ -168,6 +176,7 @@ dopher/
 │   │   └── renders
 │   │       ├── floor.go
 │   │       ├── game.go
+│   │       ├── gun.go
 │   │       ├── megamap.go
 │   │       ├── minimap.go
 │   │       ├── npc.go

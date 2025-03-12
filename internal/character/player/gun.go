@@ -6,8 +6,6 @@ import (
 	DM "doom/internal/model"
 	"math"
 	"time"
-
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 // InitializeGun sets up the player's initial gun state.
@@ -44,6 +42,12 @@ func (p *Player) FireGun() bool {
 
 // UpdateGunState updates gun animation states.
 func (p *Player) UpdateGunState() {
+	if DM.CurrentMap != 1 {
+		p.Gun.IsFiring = false
+		p.Gun.MuzzleFlash = false
+		p.Gun.FlashTimer = 0
+		return
+	}
 	if p.Gun.FlashTimer > 0 {
 		p.Gun.FlashTimer--
 		if p.Gun.FlashTimer <= 0 {
@@ -55,42 +59,11 @@ func (p *Player) UpdateGunState() {
 	}
 }
 
-// RenderGun renders the gun on the screen.
-func RenderGun(renderer *sdl.Renderer, player *Player, textures *DM.TextureMap) {
-	gunTexture := textures.Textures[6]
-	gunWidth := DM.ScreenWidth * 0.4
-	gunHeight := gunWidth * 0.5
-	offsetY := 0.0
-	if player.Walking {
-		offsetY = player.BobOffset * 0.5
-	}
-	recoilOffset := 0.0
-	if player.Gun.IsFiring {
-		recoilOffset = 10.0
-	}
-	dstRect := &sdl.Rect{
-		X: int32((DM.ScreenWidth - gunWidth) / 2),
-		Y: int32(DM.ScreenHeight - gunHeight + offsetY + recoilOffset),
-		W: int32(gunWidth),
-		H: int32(gunHeight),
-	}
-	renderer.Copy(gunTexture, nil, dstRect)
-	if player.Gun.MuzzleFlash {
-		flashTexture := textures.Textures[7]
-		flashWidth := gunWidth * 0.3
-		flashHeight := flashWidth
-		flashRect := &sdl.Rect{
-			X: int32(DM.ScreenWidth / 2),
-			Y: int32(DM.ScreenHeight - gunHeight*0.8 + offsetY),
-			W: int32(flashWidth),
-			H: int32(flashHeight),
-		}
-		renderer.Copy(flashTexture, nil, flashRect)
-	}
-}
-
 // Weapon firing handler.
 func FireWeapon(p *Player, npcManager *NPC.NPCManager) {
+	if DM.CurrentMap != 1 {
+		return
+	}
 	rayHit := Casts.CastRay(p.X, p.Y, p.Angle)
 	hitDistance := rayHit.Distance
 	if hitDistance > 500 {

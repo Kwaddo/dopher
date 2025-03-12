@@ -7,28 +7,35 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// CheckNPCCollision checks if the player is colliding with an NPC.
-func (nm *NPCManager) CheckNPCCollision(x, y float64) bool {
-	for _, npc := range nm.NPCs {
+// Global cooldown for dialogue interaction.
+var dialogueCooldown int = 0
+
+// CheckNPCCollision checks if the player is colliding with an NPC and returns both collision status and NPC index.
+func (nm *NPCManager) CheckNPCCollision(x, y float64) (bool, int) {
+	for i, npc := range nm.NPCs {
 		dx := x - npc.X
 		dy := y - npc.Y
 		distSquared := dx*dx + dy*dy
 		if distSquared < npc.Hitbox.Radius*npc.Hitbox.Radius {
-			return true
+			return true, i
 		}
 	}
-	return false
+	return false, -1
 }
 
 // CheckInteraction checks if the player is interacting with an NPC.
 func (nm *NPCManager) CheckInteraction(playerX, playerY, playerAngle float64, keyState []uint8) {
+	if dialogueCooldown > 0 {
+		dialogueCooldown--
+		return
+	}
 	for i, npc := range nm.NPCs {
 		if npc.ShowDialog && npc.DialogueTree != nil && npc.DialogueTree.IsActive {
 			DM.InteractingNPC = i
 			if keyState[sdl.SCANCODE_ESCAPE] == 1 {
 				nm.EndDialogue(i)
+				dialogueCooldown = 30
 			}
-
 			return
 		}
 		if npc.IsEnemy && !npc.IsAlive {
@@ -63,9 +70,9 @@ func (nm *NPCManager) CheckInteraction(playerX, playerY, playerAngle float64, ke
 func (nm *NPCManager) CheckDialogueInput(keyState []uint8) {
 	for i, npc := range nm.NPCs {
 		if npc.ShowDialog && npc.DialogueTree != nil && npc.DialogueTree.IsActive {
-			eKeyPressed := keyState[sdl.SCANCODE_E] == 1
-			keyJustPressed := eKeyPressed && !npc.DialogueTree.KeyWasDown
-			npc.DialogueTree.KeyWasDown = eKeyPressed
+			eKeyCurrentlyPressed := keyState[sdl.SCANCODE_E] == 1
+			keyJustPressed := eKeyCurrentlyPressed && !npc.DialogueTree.KeyWasDown
+			npc.DialogueTree.KeyWasDown = eKeyCurrentlyPressed
 			if keyState[sdl.SCANCODE_RETURN] == 1 {
 				nm.EndDialogue(i)
 				return
@@ -75,24 +82,38 @@ func (nm *NPCManager) CheckDialogueInput(keyState []uint8) {
 					npc.DialogueTree.CharsToShow = len(npc.DialogText)
 					npc.DialogueTree.TextFullyShown = true
 					npc.DialogueTree.ReadyToAdvance = true
-					return
 				} else if npc.DialogueTree.ReadyToAdvance {
 					currentNode := npc.DialogueTree.Nodes[npc.DialogueTree.CurrentNodeID]
 					if currentNode == nil {
-						nm.EndDialogue(i)
+						npc.ShowDialog = false
+						npc.DialogueTree.IsActive = false
+						DM.InteractingNPC = -1
 						return
 					}
-					nextNodeExists := currentNode.NextID != "" && npc.DialogueTree.Nodes[currentNode.NextID] != nil
-					if nextNodeExists {
+					if currentNode.ID == "end" {
+						nm.EndDialogue(i)
+						dialogueCooldown = 30
+						return
+					}
+					isLastNode := currentNode.NextID == "" || currentNode.NextID == "end"
+					if isLastNode && currentNode.NextID == "" {
+						nm.EndDialogue(i)
+						return
+					} else if isLastNode && currentNode.NextID == "end" {
+						AdvanceToNextDialogue(npc, currentNode.NextID)
+					} else if npc.DialogueTree.Nodes[currentNode.NextID] != nil {
 						AdvanceToNextDialogue(npc, currentNode.NextID)
 					} else {
-						nm.EndDialogue(i)
+						npc.ShowDialog = false
+						npc.DialogueTree.IsActive = false
+						DM.InteractingNPC = -1
 					}
-					return
 				}
 			}
 			if keyState[sdl.SCANCODE_ESCAPE] == 1 {
-				nm.EndDialogue(i)
+				npc.ShowDialog = false
+				npc.DialogueTree.IsActive = false
+				DM.InteractingNPC = -1
 			}
 			return
 		}
@@ -105,11 +126,11 @@ func CheckWallCollision(x, y, radius float64) bool {
 	mapY := int(y / 100)
 	for checkY := mapY - 1; checkY <= mapY+1; checkY++ {
 		for checkX := mapX - 1; checkX <= mapX+1; checkX++ {
-			if checkY < 0 || checkY >= len(DM.GlobalMap.WorldMap) ||
-				checkX < 0 || checkX >= len(DM.GlobalMap.WorldMap[0]) {
+			if checkY < 0 || checkY >= len(DM.GlobalMaps.Maps[DM.CurrentMap]) ||
+				checkX < 0 || checkX >= len(DM.GlobalMaps.Maps[DM.CurrentMap][0]) {
 				continue
 			}
-			if DM.GlobalMap.WorldMap[checkY][checkX] > 0 {
+			if DM.GlobalMaps.Maps[DM.CurrentMap][checkY][checkX] > 0 {
 				wallMinX := float64(checkX) * 100
 				wallMinY := float64(checkY) * 100
 				wallMaxX := wallMinX + 100

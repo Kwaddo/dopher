@@ -20,6 +20,9 @@ func RenderNPCs(player *MC.Player, npcManager *NPC.NPCManager, DynamicFOV float6
 		eyeOffset = DM.ScreenHeight * (1 - heightRatio) * 0.1
 	}
 	for _, npc := range npcManager.NPCs {
+		if npc.MapIndex != DM.CurrentMap {
+			continue
+		}
 		dx := npc.X - player.X
 		dy := npc.Y - player.Y
 		distance := math.Sqrt(dx*dx + dy*dy)

@@ -64,4 +64,6 @@ var (
 	LastKeyState byte = 0
 	// Shows if interacting an NPC.
 	InteractingNPC int = -1
+	// Which map the player is currently at.
+	CurrentMap int = 0
 )

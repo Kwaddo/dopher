@@ -14,7 +14,7 @@ func RenderMinimap(renderer *sdl.Renderer, player *MC.Player, showMap bool) {
 		return
 	}
 	mapSize := float64(DM.ScreenWidth) * 0.1
-	tileSize := mapSize / float64(len(DM.GlobalMap.WorldMap))
+	tileSize := mapSize / float64(len(DM.GlobalMaps.Maps[DM.CurrentMap]))
 	renderer.SetDrawColor(0, 0, 0, 200)
 	renderer.FillRect(&sdl.Rect{
 		X: 10,
@@ -22,10 +22,10 @@ func RenderMinimap(renderer *sdl.Renderer, player *MC.Player, showMap bool) {
 		W: int32(mapSize),
 		H: int32(mapSize),
 	})
-	for y := 0; y < len(DM.GlobalMap.WorldMap); y++ {
-		for x := 0; x < len(DM.GlobalMap.WorldMap[y]); x++ {
-			if DM.GlobalMap.WorldMap[y][x] > 0 {
-				if DM.GlobalMap.WorldMap[y][x] == 1 {
+	for y := 0; y < len(DM.GlobalMaps.Maps[DM.CurrentMap]); y++ {
+		for x := 0; x < len(DM.GlobalMaps.Maps[DM.CurrentMap][y]); x++ {
+			if DM.GlobalMaps.Maps[DM.CurrentMap][y][x] > 0 {
+				if DM.GlobalMaps.Maps[DM.CurrentMap][y][x] == 1 {
 					renderer.SetDrawColor(128, 128, 128, 255)
 				} else {
 					renderer.SetDrawColor(139, 69, 19, 255)

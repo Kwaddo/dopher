@@ -36,7 +36,7 @@ func CastRay(startX, startY, angle float64) *DM.RayHit {
 		sideDistY = (float64(mapY) + 1.0 - startY/100) * deltaDistY * 100
 	}
 	var isVertical bool
-	WM := DM.GlobalMap.WorldMap
+	WM := DM.GlobalMaps.Maps
 	for {
 		if sideDistX < sideDistY {
 			sideDistX += deltaDistX * 100
@@ -47,10 +47,10 @@ func CastRay(startX, startY, angle float64) *DM.RayHit {
 			mapY += stepY
 			isVertical = false
 		}
-		if mapX < 0 || mapX >= len(WM[0]) || mapY < 0 || mapY >= len(WM) {
+		if mapX < 0 || mapX >= len(WM[DM.CurrentMap][0]) || mapY < 0 || mapY >= len(WM[DM.CurrentMap]) {
 			return &DM.RayHit{Distance: DM.MaxDepth, WallType: 0}
 		}
-		if WM[mapY][mapX] > 0 {
+		if WM[DM.CurrentMap][mapY][mapX] > 0 {
 			var distance float64
 			if isVertical {
 				distance = (float64(mapX) - startX/100 + (1-float64(stepX))/2) / rayX * 100
@@ -59,7 +59,7 @@ func CastRay(startX, startY, angle float64) *DM.RayHit {
 			}
 			return &DM.RayHit{
 				Distance:   distance,
-				WallType:   WM[mapY][mapX],
+				WallType:   WM[DM.CurrentMap][mapY][mapX],
 				HitPointX:  startX + rayX*distance,
 				HitPointY:  startY + rayY*distance,
 				IsVertical: isVertical,

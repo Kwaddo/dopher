@@ -53,10 +53,16 @@ func (nm *NPCManager) EndDialogue(npcIndex int) bool {
 		return false
 	}
 	npc := nm.NPCs[npcIndex]
+	npc.ShowDialog = false
 	if npc.DialogueTree != nil {
 		npc.DialogueTree.IsActive = false
+		npc.DialogueTree.TextFullyShown = false
+		npc.DialogueTree.ReadyToAdvance = false
+		npc.DialogueTree.CharsToShow = 0
+		npc.DialogueTree.KeyWasDown = false
+		npc.DialogueTree.CurrentNodeID = "start"
 	}
-	npc.ShowDialog = false
+	DM.InteractingNPC = -1
 	return true
 }
 
@@ -133,6 +139,11 @@ func CreateBasicDialogueTree() *DM.DialogueTree {
 
 // AdvanceToNextDialogue moves to the next dialogue node in sequence
 func AdvanceToNextDialogue(npc *DM.NPC, nextNodeID string) {
+	if nextNodeID == "" {
+		npc.DialogueTree.IsActive = false
+		npc.ShowDialog = false
+		return
+	}
 	npc.DialogueTree.CurrentNodeID = nextNodeID
 	npc.DialogueTree.CharsToShow = 0
 	npc.DialogueTree.TextFullyShown = false

@@ -59,14 +59,7 @@ func (p *Player) Actions(state []uint8, npcManager *NPC.NPCManager) bool {
 		p.X = newX
 		p.Y = newY
 	}
-	if npcManager := NPC.GlobalNPCManager; npcManager != nil {
-		if npcManager.CheckNPCCollision(p.X, p.Y) {
-			p.X = oldX
-			p.Y = oldY
-			p.VelocityX = 0
-			p.VelocityY = 0
-		}
-	}
+	p.HandleBattle(npcManager, oldX, oldY)
 	if p.Walking && DM.HeadBobbingEnabled {
 		bobSpeed := 0.1
 		if p.Running {

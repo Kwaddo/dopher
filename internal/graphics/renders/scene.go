@@ -124,7 +124,7 @@ func RenderScene(
 	} else {
 		RenderMinimap(renderer, player, *pShowMap)
 	}
-	MC.RenderGun(renderer, player, textures)
+	RenderGun(renderer, player, textures)
 	for _, npc := range npcManager.NPCs {
 		if npc.ShowDialog {
 			if npc.DialogueTree != nil {
