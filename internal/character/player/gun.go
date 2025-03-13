@@ -25,6 +25,12 @@ func (p *Player) InitializeGun() {
 
 // FireGun attempts to fire the gun and returns whether it was successful or not.
 func (p *Player) FireGun() bool {
+	if DM.CountdownFreeze {
+		return false
+	}
+	if DM.CurrentMap != 1 {
+		return false
+	}
 	now := time.Now()
 	if now.Sub(p.Gun.LastFired) < p.Gun.FireRate {
 		return false

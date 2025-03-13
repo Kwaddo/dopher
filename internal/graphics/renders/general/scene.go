@@ -4,6 +4,7 @@ import (
 	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
+	UI "doom/internal/graphics/renders/ui"
 	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -26,8 +27,8 @@ func RenderScene(
 	renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
-	RenderFloor(renderer, player)
-	RenderRoof(renderer, player)
+	UI.RenderFloor(renderer, player)
+	UI.RenderRoof(renderer, player)
 	renderDone := make(chan struct{})
 	npcRenderDone := make(chan struct{})
 	go func() {
@@ -120,11 +121,11 @@ func RenderScene(
 		}
 	}
 	if *pShowMegaMap {
-		RenderMegaMap(renderer, player, *pShowMegaMap)
+		UI.RenderMegaMap(renderer, player, *pShowMegaMap)
 	} else {
-		RenderMinimap(renderer, player, *pShowMap)
+		UI.RenderMinimap(renderer, player, *pShowMap)
 	}
-	RenderGun(renderer, player, textures)
+	UI.RenderGun(renderer, player, textures)
 	for _, npc := range npcManager.NPCs {
 		if npc.ShowDialog {
 			if npc.DialogueTree != nil {

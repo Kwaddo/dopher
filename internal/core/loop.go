@@ -5,7 +5,8 @@ import (
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
 	Casts "doom/internal/graphics/casting"
-	Graphics "doom/internal/graphics/renders"
+	Graphics "doom/internal/graphics/renders/general"
+	Visual "doom/internal/graphics/renders/visual"
 	DM "doom/internal/model"
 	Menu "doom/internal/ui"
 	"math"
@@ -79,9 +80,10 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 			break
 		}
 		DM.GlobalFrameCount++
+		Visual.UpdateTransition()
+		Visual.UpdateCountdown()
 		renderer.SetRenderTarget(currentBuffer)
 		renderer.Clear()
-
 		if DM.GlobalGameState.InMainMenu {
 			Menu.RenderMainMenu(renderer)
 		} else if DM.GlobalGameState.InOptionsMenu {
@@ -145,7 +147,6 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 			if err != nil {
 				panic(err)
 			}
-
 			frameBuffer2, err = renderer.CreateTexture(sdl.PIXELFORMAT_RGBA8888,
 				sdl.TEXTUREACCESS_TARGET,
 				int32(DM.ScreenWidth),
@@ -153,7 +154,6 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 			if err != nil {
 				panic(err)
 			}
-
 			currentBuffer = frameBuffer1
 			DM.NeedToRecreateBuffers = false
 			bufferMutex.Unlock()

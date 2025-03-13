@@ -2,6 +2,7 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
+	Visual "doom/internal/graphics/renders/visual"
 	DM "doom/internal/model"
 	"math"
 )
@@ -19,18 +20,25 @@ var (
 // HandleBattle handles the battle between the player and an enemy NPC.
 func (p *Player) HandleBattle(npcManager *NPC.NPCManager, oldX float64, oldY float64) {
 	if enemyInBattle >= 0 && !npcManager.NPCs[enemyInBattle].IsAlive {
-		DM.CurrentMap = originalMap
-		p.X = originalPlayerX + 32
-		p.Y = originalPlayerY
+		Visual.StartTransition(func() {
+			DM.CurrentMap = originalMap
+			p.X = originalPlayerX + 32
+			p.Y = originalPlayerY
+			p.VelocityX = 0
+			p.VelocityY = 0
+			npcManager.NPCs[enemyInBattle].X = originalEnemyX
+			npcManager.NPCs[enemyInBattle].Y = originalEnemyY
+			npcManager.NPCs[enemyInBattle].MapIndex = originalMap
+			npcManager.NPCs[enemyInBattle].DialogText = "I'll get you next time!"
+			npcManager.NPCs[enemyInBattle].ShowDialog = true
+			npcManager.NPCs[enemyInBattle].DialogTimer = 180
+			enemyInBattle = -1
+		})
+		return
+	}
+	if DM.CountdownFreeze {
 		p.VelocityX = 0
 		p.VelocityY = 0
-		npcManager.NPCs[enemyInBattle].X = originalEnemyX
-		npcManager.NPCs[enemyInBattle].Y = originalEnemyY
-		npcManager.NPCs[enemyInBattle].MapIndex = originalMap
-		npcManager.NPCs[enemyInBattle].DialogText = "I'll get you next time!"
-		npcManager.NPCs[enemyInBattle].ShowDialog = true
-		npcManager.NPCs[enemyInBattle].DialogTimer = 180
-		enemyInBattle = -1
 		return
 	}
 	if npcManager != nil {
@@ -43,25 +51,29 @@ func (p *Player) HandleBattle(npcManager *NPC.NPCManager, oldX float64, oldY flo
 				originalEnemyY = npcManager.NPCs[npcIndex].Y
 				originalMap = DM.CurrentMap
 				enemyInBattle = npcIndex
-				DM.CurrentMap = 1
-				p.X = 300
-				p.Y = 300
-				p.VelocityX = 0
-				p.VelocityY = 0
-				npcManager.NPCs[npcIndex].X = 400
-				npcManager.NPCs[npcIndex].Y = 400
-				npcManager.NPCs[npcIndex].DialogText = "Welcome to my domain!"
-				npcManager.NPCs[npcIndex].MapIndex = 1
-				npcManager.NPCs[npcIndex].ShowDialog = true
-				npcManager.NPCs[npcIndex].DialogTimer = 180
-				if DM.CurrentMap < len(DM.GlobalMaps.Maps) {
-					mapWidth := len(DM.GlobalMaps.Maps[DM.CurrentMap][0]) * 100
-					mapHeight := len(DM.GlobalMaps.Maps[DM.CurrentMap]) * 100
-					p.X = math.Min(math.Max(p.X, 150), float64(mapWidth-150))
-					p.Y = math.Min(math.Max(p.Y, 150), float64(mapHeight-150))
-					npcManager.NPCs[npcIndex].X = math.Min(math.Max(npcManager.NPCs[npcIndex].X, 150), float64(mapWidth-150))
-					npcManager.NPCs[npcIndex].Y = math.Min(math.Max(npcManager.NPCs[npcIndex].Y, 150), float64(mapHeight-150))
-				}
+				Visual.StartTransition(func() {
+					DM.CurrentMap = 1
+					p.X = 300
+					p.Y = 300
+					p.VelocityX = 0
+					p.VelocityY = 0
+					npcManager.NPCs[npcIndex].X = 400
+					npcManager.NPCs[npcIndex].Y = 400
+					npcManager.NPCs[npcIndex].DialogText = "Welcome to my domain!"
+					npcManager.NPCs[npcIndex].MapIndex = 1
+					npcManager.NPCs[npcIndex].ShowDialog = true
+					npcManager.NPCs[npcIndex].DialogTimer = 180
+					if DM.CurrentMap < len(DM.GlobalMaps.Maps) {
+						mapWidth := len(DM.GlobalMaps.Maps[DM.CurrentMap][0]) * 100
+						mapHeight := len(DM.GlobalMaps.Maps[DM.CurrentMap]) * 100
+						p.X = math.Min(math.Max(p.X, 150), float64(mapWidth-150))
+						p.Y = math.Min(math.Max(p.Y, 150), float64(mapHeight-150))
+						npcManager.NPCs[npcIndex].X = math.Min(math.Max(npcManager.NPCs[npcIndex].X, 150), float64(mapWidth-150))
+						npcManager.NPCs[npcIndex].Y = math.Min(math.Max(npcManager.NPCs[npcIndex].Y, 150), float64(mapHeight-150))
+					}
+					Visual.StartCountdown()
+				})
+				return
 			} else {
 				p.X = oldX
 				p.Y = oldY

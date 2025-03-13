@@ -8,10 +8,14 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// StartDialogue initiates dialogue with an NPC
+// StartDialogue initiates dialogue with an NPC.
 func (nm *NPCManager) StartDialogue(npcIndex int) bool {
 	if npcIndex < 0 || npcIndex >= len(nm.NPCs) {
 		return false
+	}
+	activeDialogue := nm.GetActiveDialogueNPC()
+	if activeDialogue >= 0 && activeDialogue != npcIndex {
+		nm.EndDialogue(activeDialogue)
 	}
 	npc := nm.NPCs[npcIndex]
 	if npc.DialogueTree != nil {
@@ -19,13 +23,10 @@ func (nm *NPCManager) StartDialogue(npcIndex int) bool {
 		npc.DialogueTree.ReadyToAdvance = false
 		npc.DialogueTree.GraceStartTime = int64(DM.GlobalFrameCount)
 		npc.DialogueTree.GracePeriod = 60
-
-		// Initialize text animation
 		npc.DialogueTree.CharsToShow = 0
 		npc.DialogueTree.TextFullyShown = false
 		npc.DialogueTree.LastCharTime = int64(DM.GlobalFrameCount)
-		npc.DialogueTree.TextSpeed = 2 // Medium speed (characters per frame)
-
+		npc.DialogueTree.TextSpeed = 2
 		if npc.DialogueTree.CurrentNodeID == "" {
 			npc.DialogueTree.CurrentNodeID = "start"
 		}
@@ -47,7 +48,7 @@ func (nm *NPCManager) StartDialogue(npcIndex int) bool {
 	}
 }
 
-// EndDialogue ends the current dialogue
+// EndDialogue ends the current dialogue.
 func (nm *NPCManager) EndDialogue(npcIndex int) bool {
 	if npcIndex < 0 || npcIndex >= len(nm.NPCs) {
 		return false
@@ -66,7 +67,7 @@ func (nm *NPCManager) EndDialogue(npcIndex int) bool {
 	return true
 }
 
-// UpdateTextAnimations updates the text animations for all active dialogues
+// UpdateTextAnimations updates the text animations for all active dialogues.
 func (nm *NPCManager) UpdateTextAnimations() {
 	keyState := sdl.GetKeyboardState()
 	speedBoost := 1
@@ -113,7 +114,7 @@ func (nm *NPCManager) UpdateTextAnimations() {
 	}
 }
 
-// CreateBasicDialogueTree creates a dialogue tree by loading from a file or falling back to defaults
+// CreateBasicDialogueTree creates a dialogue tree by loading from a file or falling back to defaults.
 func CreateBasicDialogueTree() *DM.DialogueTree {
 	dialogueFile := "assets/dialogues/npc_basic.txt"
 	tree, err := Dialogue.LoadDialogueFromFile(dialogueFile)
@@ -137,7 +138,7 @@ func CreateBasicDialogueTree() *DM.DialogueTree {
 	return tree
 }
 
-// AdvanceToNextDialogue moves to the next dialogue node in sequence
+// AdvanceToNextDialogue moves to the next dialogue node in sequence.
 func AdvanceToNextDialogue(npc *DM.NPC, nextNodeID string) {
 	if nextNodeID == "" {
 		npc.DialogueTree.IsActive = false
@@ -161,4 +162,14 @@ func AdvanceToNextDialogue(npc *DM.NPC, nextNodeID string) {
 	if nextNode.OnEnter != nil {
 		nextNode.OnEnter(npc)
 	}
+}
+
+// GetActiveDialogueNPC returns the index of the first NPC with active dialogue or -1 if none.
+func (nm *NPCManager) GetActiveDialogueNPC() int {
+	for i, npc := range nm.NPCs {
+		if npc.ShowDialog {
+			return i
+		}
+	}
+	return -1
 }

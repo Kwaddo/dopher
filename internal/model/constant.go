@@ -23,6 +23,17 @@ const (
 	EnemyStateAttack  = 2
 	// The speed of the LERP.
 	LerpSpeed = 0.15
+	// Transition states.
+	TransitionInactive = 0
+	TransitionFadeOut  = 1
+	TransitionFadeIn   = 2
+	// Default transition duration (in frames).
+	DefaultTransitionDuration = 90
+	// Battle countdown constants.
+	CountdownInactive = 0
+	CountdownActive   = 1
+	// 3 seconds at 60fps (60 frames per number).
+	CountdownDuration = 180
 )
 
 var (
@@ -66,4 +77,16 @@ var (
 	InteractingNPC int = -1
 	// Which map the player is currently at.
 	CurrentMap int = 0
+	// Transition state tracking.
+	TransitionState    int     = TransitionInactive
+	TransitionProgress float64 = 0.0
+	TransitionDuration float64 = DefaultTransitionDuration
+	// Function to call when transition completes.
+	TransitionCallback func()
+	// Battle countdown tracking.
+	CountdownState    int     = CountdownInactive
+	CountdownProgress float64 = 0.0
+	CountdownNumber   int     = 3
+	// Freezes player/enemy movement during countdown.
+	CountdownFreeze bool = false
 )

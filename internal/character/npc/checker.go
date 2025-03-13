@@ -70,6 +70,9 @@ func (nm *NPCManager) CheckInteraction(playerX, playerY, playerAngle float64, ke
 func (nm *NPCManager) CheckDialogueInput(keyState []uint8) {
 	for i, npc := range nm.NPCs {
 		if npc.ShowDialog && npc.DialogueTree != nil && npc.DialogueTree.IsActive {
+			if DM.InteractingNPC != i {
+				DM.InteractingNPC = i
+			}
 			eKeyCurrentlyPressed := keyState[sdl.SCANCODE_E] == 1
 			keyJustPressed := eKeyCurrentlyPressed && !npc.DialogueTree.KeyWasDown
 			npc.DialogueTree.KeyWasDown = eKeyCurrentlyPressed

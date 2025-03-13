@@ -7,6 +7,9 @@ import (
 
 // UpdateEnemies updates all enemy NPCs in the game.
 func (nm *NPCManager) UpdateEnemies(playerX, playerY float64) {
+	if DM.CountdownFreeze {
+		return
+	}
 	for i, npc := range nm.NPCs {
 		if !npc.IsEnemy || !npc.IsAlive {
 			continue

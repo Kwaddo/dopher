@@ -1,6 +1,7 @@
 package core
 
 import (
+	Visual "doom/internal/graphics/renders/visual"
 	DM "doom/internal/model"
 	Menu "doom/internal/ui"
 
@@ -64,11 +65,15 @@ func HandleEvents(window *sdl.Window, renderer *sdl.Renderer) bool {
 					case sdl.K_RETURN, sdl.K_SPACE:
 						switch Menu.GlobalPauseMenu.GetSelectedOption() {
 						case "Resume":
-							DM.GlobalGameState.IsPaused = false
+							Visual.StartTransition(func() {
+								DM.GlobalGameState.IsPaused = false
+							})
 							return false
 						case "Return to Menu":
-							DM.GlobalGameState.IsPaused = false
-							DM.GlobalGameState.InMainMenu = true
+							Visual.StartTransition(func() {
+								DM.GlobalGameState.IsPaused = false
+								DM.GlobalGameState.InMainMenu = true
+							})
 							return false
 						case "Quit":
 							return true

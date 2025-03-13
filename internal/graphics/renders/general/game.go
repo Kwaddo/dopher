@@ -4,6 +4,7 @@ import (
 	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
+	Visual "doom/internal/graphics/renders/visual"
 	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -27,4 +28,6 @@ func RenderGame(renderer *sdl.Renderer, player *MC.Player, npcManager *NPC.NPCMa
 		&DM.ShowMegaMap,
 		npcRenderChan,
 	)
+	Visual.RenderCountdown(renderer)
+	Visual.RenderTransition(renderer)
 }
