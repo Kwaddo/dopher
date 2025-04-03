@@ -1,18 +1,12 @@
-package npc
+package global
 
 import (
-	DM "doom/internal/global"
 	"math"
 )
 
-// NPCManager manages all NPCs in the game.
-type NPCManager DM.NPCManager
-
-var GlobalNPCManager *NPCManager
-
 // AddNPC adds a new NPC to the NPCManager.
 func (nm *NPCManager) AddNPC(x, y float64, texture int) {
-	npc := &DM.NPC{
+	npc := &NPC{
 		X:       x,
 		Y:       y,
 		Texture: texture,

@@ -1,7 +1,7 @@
 package npc
 
 import (
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 	"math"
 )
 

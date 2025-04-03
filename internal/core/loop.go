@@ -4,11 +4,13 @@ import (
 	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
+	DM "doom/internal/global"
 	Casts "doom/internal/graphics/casting"
 	Graphics "doom/internal/graphics/renders/general"
 	Visual "doom/internal/graphics/renders/visual"
-	DM "doom/internal/model"
+	Loader "doom/internal/loader"
 	Menu "doom/internal/ui"
+	"fmt"
 	"math"
 	"sync"
 
@@ -30,7 +32,18 @@ func RunGameLoop(renderer *sdl.Renderer, player *MC.Player) {
 	DM.RenderChan = make(chan []*DM.RenderSlice, 1)
 	npcRenderChan := make(chan []*DM.RenderSlice, 1)
 	DM.ZBuffer = make([]float64, int(DM.ScreenWidth))
-	npcManager := NPC.NewNPCManager()
+	npcPath := "assets/npcs/npcs.json" // Make sure this file exists!
+	loadedNPCs, err := Loader.LoadNPCsFromJSON(npcPath)
+	if err != nil {
+		fmt.Printf("Warning: Failed to load NPCs from JSON: %v\n", err)
+		// Create empty NPCManager as fallback
+		NPC.GlobalNPCManager = &NPC.NPCManager{NPCs: []*DM.NPC{}}
+	} else {
+		// Initialize with loaded NPCs
+		NPC.GlobalNPCManager = &NPC.NPCManager{NPCs: loadedNPCs}
+	}
+
+	npcManager := NPC.GlobalNPCManager
 	NPC.GlobalNPCManager = npcManager
 	Graphics.DialogRenderer, err = Dialogue.NewDialogueRenderer()
 	if err != nil {

@@ -4,8 +4,8 @@ import (
 	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
+	DM "doom/internal/global"
 	Visual "doom/internal/graphics/renders/visual"
-	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
 )

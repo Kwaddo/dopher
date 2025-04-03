@@ -2,7 +2,8 @@ package renders
 
 import (
 	MC "doom/internal/character/player"
-	DM "doom/internal/model"
+	DM "doom/internal/global"
+	MapModel "doom/internal/mapmodel"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -13,7 +14,7 @@ func RenderMegaMap(renderer *sdl.Renderer, player *MC.Player, showMegaMap bool) 
 		return
 	}
 	mapSize := float64(DM.ScreenHeight) * 0.9
-	tileSize := mapSize / float64(len(DM.GlobalMaps.Maps[DM.CurrentMap]))
+	tileSize := mapSize / float64(len(MapModel.GlobalMaps.Maps[DM.CurrentMap]))
 	mapX := (DM.ScreenWidth - mapSize) / 2
 	mapY := (DM.ScreenHeight - mapSize) / 2
 	renderer.SetDrawColor(0, 0, 0, 200)
@@ -23,10 +24,10 @@ func RenderMegaMap(renderer *sdl.Renderer, player *MC.Player, showMegaMap bool) 
 		W: int32(mapSize),
 		H: int32(mapSize),
 	})
-	for y := 0; y < len(DM.GlobalMaps.Maps[DM.CurrentMap]); y++ {
-		for x := 0; x < len(DM.GlobalMaps.Maps[DM.CurrentMap][y]); x++ {
-			if DM.GlobalMaps.Maps[DM.CurrentMap][y][x] > 0 {
-				if DM.GlobalMaps.Maps[DM.CurrentMap][y][x] == 1 {
+	for y := 0; y < len(MapModel.GlobalMaps.Maps[DM.CurrentMap]); y++ {
+		for x := 0; x < len(MapModel.GlobalMaps.Maps[DM.CurrentMap][y]); x++ {
+			if MapModel.GlobalMaps.Maps[DM.CurrentMap][y][x] > 0 {
+				if MapModel.GlobalMaps.Maps[DM.CurrentMap][y][x] == 1 {
 					renderer.SetDrawColor(128, 128, 128, 255)
 				} else {
 					renderer.SetDrawColor(139, 69, 19, 255)

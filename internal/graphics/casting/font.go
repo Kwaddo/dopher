@@ -1,7 +1,7 @@
 package casting
 
 import (
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 	"fmt"
 
 	"github.com/veandco/go-sdl2/ttf"

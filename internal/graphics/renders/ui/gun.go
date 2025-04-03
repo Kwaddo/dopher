@@ -2,7 +2,7 @@ package renders
 
 import (
 	MC "doom/internal/character/player"
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 
 	"github.com/veandco/go-sdl2/sdl"
 )

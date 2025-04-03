@@ -1,7 +1,8 @@
 package npc
 
 import (
-	DM "doom/internal/model"
+	DM "doom/internal/global"
+	MapModel "doom/internal/mapmodel"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -129,11 +130,11 @@ func CheckWallCollision(x, y, radius float64) bool {
 	mapY := int(y / 100)
 	for checkY := mapY - 1; checkY <= mapY+1; checkY++ {
 		for checkX := mapX - 1; checkX <= mapX+1; checkX++ {
-			if checkY < 0 || checkY >= len(DM.GlobalMaps.Maps[DM.CurrentMap]) ||
-				checkX < 0 || checkX >= len(DM.GlobalMaps.Maps[DM.CurrentMap][0]) {
+			if checkY < 0 || checkY >= len(MapModel.GlobalMaps.Maps[DM.CurrentMap]) ||
+				checkX < 0 || checkX >= len(MapModel.GlobalMaps.Maps[DM.CurrentMap][0]) {
 				continue
 			}
-			if DM.GlobalMaps.Maps[DM.CurrentMap][checkY][checkX] > 0 {
+			if MapModel.GlobalMaps.Maps[DM.CurrentMap][checkY][checkX] > 0 {
 				wallMinX := float64(checkX) * 100
 				wallMinY := float64(checkY) * 100
 				wallMaxX := wallMinX + 100

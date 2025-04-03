@@ -1,8 +1,8 @@
 package renders
 
 import (
+	DM "doom/internal/global"
 	Casts "doom/internal/graphics/casting"
-	DM "doom/internal/model"
 	"fmt"
 	"math"
 

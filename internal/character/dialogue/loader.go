@@ -2,7 +2,7 @@ package dialogue
 
 import (
 	"bufio"
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 	"fmt"
 	"os"
 	"path/filepath"

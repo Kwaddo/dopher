@@ -4,8 +4,8 @@ import (
 	Dialogue "doom/internal/character/dialogue"
 	NPC "doom/internal/character/npc"
 	MC "doom/internal/character/player"
+	DM "doom/internal/global"
 	UI "doom/internal/graphics/renders/ui"
-	DM "doom/internal/model"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -87,7 +87,17 @@ func RenderScene(
 	}
 	go func() {
 		npcSlices := RenderNPCs(player, npcManager, *pDynamicFOV, *pZBuffer)
-		npcRenderChan <- npcSlices
+		globalSlices := make([]*DM.RenderSlice, len(npcSlices))
+		for i, slice := range npcSlices {
+			globalSlices[i] = &DM.RenderSlice{
+				WallType: slice.WallType,
+				Darkness: slice.Darkness,
+				DstRect:  slice.DstRect,
+				Distance: slice.Distance,
+				TexCoord: slice.TexCoord,
+			}
+		}
+		npcRenderChan <- globalSlices
 		npcRenderDone <- struct{}{}
 	}()
 	npcSlices := <-npcRenderChan

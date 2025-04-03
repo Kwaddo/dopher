@@ -2,8 +2,9 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
+	DM "doom/internal/global"
 	Visual "doom/internal/graphics/renders/visual"
-	DM "doom/internal/model"
+	MapModel "doom/internal/mapmodel"
 	"math"
 )
 
@@ -63,9 +64,9 @@ func (p *Player) HandleBattle(npcManager *NPC.NPCManager, oldX float64, oldY flo
 					npcManager.NPCs[npcIndex].MapIndex = 1
 					npcManager.NPCs[npcIndex].ShowDialog = true
 					npcManager.NPCs[npcIndex].DialogTimer = 180
-					if DM.CurrentMap < len(DM.GlobalMaps.Maps) {
-						mapWidth := len(DM.GlobalMaps.Maps[DM.CurrentMap][0]) * 100
-						mapHeight := len(DM.GlobalMaps.Maps[DM.CurrentMap]) * 100
+					if DM.CurrentMap < len(MapModel.GlobalMaps.Maps) {
+						mapWidth := len(MapModel.GlobalMaps.Maps[DM.CurrentMap][0]) * 100
+						mapHeight := len(MapModel.GlobalMaps.Maps[DM.CurrentMap]) * 100
 						p.X = math.Min(math.Max(p.X, 150), float64(mapWidth-150))
 						p.Y = math.Min(math.Max(p.Y, 150), float64(mapHeight-150))
 						npcManager.NPCs[npcIndex].X = math.Min(math.Max(npcManager.NPCs[npcIndex].X, 150), float64(mapWidth-150))

@@ -1,13 +1,14 @@
 package player
 
 import (
-	DM "doom/internal/model"
+	DM "doom/internal/global"
+	MapModel "doom/internal/mapmodel"
 	"math"
 )
 
 // CheckCollision checks if the player is colliding with a wall.
 func CheckCollision(x, y float64) bool {
-	WM := DM.GlobalMaps.Maps
+	WM := MapModel.GlobalMaps.Maps
 	for angle := 0.0; angle < 2*math.Pi; angle += math.Pi / 4 {
 		checkX := x + math.Cos(angle)*DM.CollisionBuffer
 		checkY := y + math.Sin(angle)*DM.CollisionBuffer

@@ -1,7 +1,8 @@
 package casting
 
 import (
-	DM "doom/internal/model"
+	DM "doom/internal/global"
+	MapModel "doom/internal/mapmodel"
 	"math"
 )
 
@@ -36,7 +37,7 @@ func CastRay(startX, startY, angle float64) *DM.RayHit {
 		sideDistY = (float64(mapY) + 1.0 - startY/100) * deltaDistY * 100
 	}
 	var isVertical bool
-	WM := DM.GlobalMaps.Maps
+	WM := MapModel.GlobalMaps.Maps
 	for {
 		if sideDistX < sideDistY {
 			sideDistX += deltaDistX * 100

@@ -1,4 +1,4 @@
-package model
+package global
 
 import (
 	"math"
@@ -88,5 +88,6 @@ var (
 	CountdownProgress float64 = 0.0
 	CountdownNumber   int     = 3
 	// Freezes player/enemy movement during countdown.
-	CountdownFreeze bool = false
+	CountdownFreeze  bool = false
+	GlobalNPCManager *NPCManager
 )

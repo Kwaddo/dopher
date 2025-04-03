@@ -1,0 +1,68 @@
+[
+  {
+    "x": 450,
+    "y": 450,
+    "texture": 3,
+    "width": 48,
+    "height": 64,
+    "dialogText": "Hello traveler! How are you?",
+    "hitbox": {
+      "radius": 24
+    },
+    "isEnemy": false,
+    "health": 100,
+    "maxHealth": 100,
+    "isAlive": true,
+    "mapIndex": 0
+  },
+  {
+    "x": 550,
+    "y": 550,
+    "texture": 4,
+    "width": 64,
+    "height": 64,
+    "dialogText": "Beef.",
+    "hitbox": {
+      "radius": 12
+    },
+    "isEnemy": false,
+    "health": 100,
+    "maxHealth": 100,
+    "isAlive": true,
+    "mapIndex": 0
+  },
+  {
+    "x": 1050,
+    "y": 1050,
+    "texture": 5,
+    "width": 64,
+    "height": 64,
+    "hitbox": {
+      "radius": 12
+    },
+    "dialogText": "Hello gang.",
+    "showDialog": false,
+    "dialogTimer": 0,
+    "mapIndex": 0
+  },
+  {
+    "x": 850,
+    "y": 350,
+    "texture": 5,
+    "width": 64,
+    "height": 64,
+    "hitbox": {
+      "radius": 24
+    },
+    "dialogText": "GRRRR!",
+    "showDialog": false,
+    "dialogTimer": 0,
+    "isEnemy": true,
+    "detectionRadius": 400,
+    "speed": 20.0,
+    "health": 100,
+    "maxHealth": 100,
+    "isAlive": true,
+    "mapIndex": 0
+  }
+]

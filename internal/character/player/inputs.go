@@ -2,7 +2,7 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"

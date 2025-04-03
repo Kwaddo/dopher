@@ -2,7 +2,7 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
-	DM "doom/internal/model"
+	DM "doom/internal/global"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -27,12 +27,7 @@ func (p *Player) Actions(state []uint8, npcManager *NPC.NPCManager) bool {
 	if state[sdl.SCANCODE_ESCAPE] == 1 || state[sdl.SCANCODE_Q] == 1 {
 		return true
 	}
-
-	// First check if a dialogue is active, and if so, handle dialogue input
-	// regardless of whether E is pressed
 	npcManager.CheckDialogueInput(state)
-
-	// Then check for new interactions only if no dialogue is currently active
 	if state[sdl.SCANCODE_E] == 1 {
 		npcManager.CheckInteraction(p.X, p.Y, p.Angle, state)
 	}
