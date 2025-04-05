@@ -1,8 +1,8 @@
 package dialogue
 
 import (
-	DM "doom/internal/global"
 	Casts "doom/internal/graphics/casting"
+	DM "doom/internal/models/global"
 	"strings"
 
 	"github.com/veandco/go-sdl2/sdl"

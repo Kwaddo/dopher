@@ -1,10 +1,7 @@
 package npc
 
 import (
-	Dialogue "doom/internal/character/dialogue"
-	DM "doom/internal/global"
-
-	"fmt"
+	DM "doom/internal/models/global"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -113,30 +110,6 @@ func (nm *NPCManager) UpdateTextAnimations() {
 			}
 		}
 	}
-}
-
-// CreateBasicDialogueTree creates a dialogue tree by loading from a file or falling back to defaults.
-func CreateBasicDialogueTree() *DM.DialogueTree {
-	dialogueFile := "assets/dialogues/npc_basic.txt"
-	tree, err := Dialogue.LoadDialogueFromFile(dialogueFile)
-	if err == nil {
-		return tree
-	}
-	fmt.Printf("Warning: Could not load dialogue file '%s': %v\nFalling back to default dialogue.\n",
-		dialogueFile, err)
-	tree = &DM.DialogueTree{
-		Nodes:          make(map[string]*DM.DialogueNode),
-		CurrentNodeID:  "start",
-		IsActive:       false,
-		ReadyToAdvance: false,
-		GraceStartTime: 0,
-		GracePeriod:    60,
-	}
-	tree.Nodes["start"] = &DM.DialogueNode{
-		ID:   "start",
-		Text: "TEXT FILE NOT FOUND.",
-	}
-	return tree
 }
 
 // AdvanceToNextDialogue moves to the next dialogue node in sequence.

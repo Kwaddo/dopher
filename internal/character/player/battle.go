@@ -2,9 +2,9 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
-	DM "doom/internal/global"
 	Visual "doom/internal/graphics/renders/visual"
-	MapModel "doom/internal/mapmodel"
+	DM "doom/internal/models/global"
+	MapModel "doom/internal/models/mapmodel"
 	"math"
 )
 

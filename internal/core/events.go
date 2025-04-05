@@ -1,8 +1,8 @@
 package core
 
 import (
-	DM "doom/internal/global"
 	Visual "doom/internal/graphics/renders/visual"
+	DM "doom/internal/models/global"
 	Menu "doom/internal/ui"
 
 	"github.com/veandco/go-sdl2/sdl"

@@ -152,7 +152,6 @@ dopher/
 ├── internal
 │   ├── character
 │   │   ├── dialogue
-│   │   │   ├── loader.go
 │   │   │   └── render.go
 │   │   ├── npc
 │   │   │   ├── checker.go
@@ -170,10 +169,6 @@ dopher/
 │   │   ├── events.go
 │   │   ├── initializer.go
 │   │   └── loop.go
-│   ├── global
-│   │   ├── constant.go
-│   │   ├── models.go
-│   │   └── npcmanager.go
 │   ├── graphics
 │   │   ├── casting
 │   │   │   ├── cast.go
@@ -195,12 +190,18 @@ dopher/
 │   │           ├── countdown.go
 │   │           └── transition.go
 │   ├── loader
+│   │   ├── dialogue.go
 │   │   ├── maps.go
 │   │   └── npcs.go
-│   ├── mapmodel
-│   │   └── maps.go
-│   ├── npcmodel
-│   │   └── npcs.go
+│   ├── models
+│   │   ├── global
+│   │   │   ├── constant.go
+│   │   │   ├── models.go
+│   │   │   └── npcmanager.go
+│   │   ├── mapmodel
+│   │   │   └── maps.go
+│   │   └── npcmodel
+│   │       └── npcs.go
 │   └── ui
 │       ├── menu.go
 │       ├── options.go

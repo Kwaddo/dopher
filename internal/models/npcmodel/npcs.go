@@ -14,5 +14,10 @@ func init() {
 		fmt.Printf("Warning: Could not load npcs from JSON (%v). Using fallback npcs data.\n", err)
 	} else {
 		NPCs.GlobalNPCManager = &NPCs.NPCManager{NPCs: npcArray}
+		for i, npc := range NPCs.GlobalNPCManager.NPCs {
+			if i == 0 {
+				npc.DialogText = "Hello!"
+			}
+		}
 	}
 }

@@ -1,8 +1,8 @@
 package ui
 
 import (
-	DM "doom/internal/global"
 	Casts "doom/internal/graphics/casting"
+	DM "doom/internal/models/global"
 	"fmt"
 	"math"
 

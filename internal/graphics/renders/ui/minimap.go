@@ -2,8 +2,8 @@ package renders
 
 import (
 	MC "doom/internal/character/player"
-	DM "doom/internal/global"
-	MapModel "doom/internal/mapmodel"
+	DM "doom/internal/models/global"
+	MapModel "doom/internal/models/mapmodel"
 	"math"
 
 	"github.com/veandco/go-sdl2/sdl"

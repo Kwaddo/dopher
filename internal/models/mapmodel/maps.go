@@ -1,8 +1,8 @@
 package mapmodel
 
 import (
-	DM "doom/internal/global"
 	Loader "doom/internal/loader"
+	DM "doom/internal/models/global"
 	"fmt"
 	"path/filepath"
 )

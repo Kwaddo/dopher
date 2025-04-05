@@ -2,8 +2,8 @@ package player
 
 import (
 	NPC "doom/internal/character/npc"
-	DM "doom/internal/global"
 	Casts "doom/internal/graphics/casting"
+	DM "doom/internal/models/global"
 	"math"
 	"time"
 )

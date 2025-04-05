@@ -3,7 +3,7 @@ package main
 import (
 	MC "doom/internal/character/player"
 	Game "doom/internal/core"
-	DM "doom/internal/global"
+	DM "doom/internal/models/global"
 )
 
 func main() {

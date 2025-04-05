@@ -1,15 +1,11 @@
 package loader
 
 import (
-	DM "doom/internal/global"
+	DM "doom/internal/models/global"
 	"encoding/json"
 	"fmt"
 	"os"
 )
-
-type NPCData struct {
-	NPCs []DM.NPC
-}
 
 func LoadNPCsFromJSON(path string) ([]*DM.NPC, error) {
 	data, err := os.ReadFile(path)
@@ -20,9 +16,12 @@ func LoadNPCsFromJSON(path string) ([]*DM.NPC, error) {
 	if err := json.Unmarshal(data, &npcData); err != nil {
 		return nil, fmt.Errorf("failed to parse npcs JSON: %v", err)
 	}
-	npcPointers := make([]*DM.NPC, len(npcData))
+	npcs := make([]*DM.NPC, len(npcData))
 	for i := range npcData {
-		npcPointers[i] = &npcData[i]
+		npcs[i] = &npcData[i]
+		if npcs[i].DialogueTree == nil {
+			npcs[i].DialogueTree = CreateBasicDialogueTree()
+		}
 	}
-	return npcPointers, nil
+	return npcs, nil
 }

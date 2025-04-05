@@ -1,7 +1,7 @@
 package loader
 
 import (
-	DM "doom/internal/global"
+	DM "doom/internal/models/global"
 	"encoding/json"
 	"fmt"
 	"os"
